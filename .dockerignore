@@ -1,0 +1,7 @@
+# 백엔드 빌드 컨텍스트(레포 맨 위)에서 뺀다. 프론트는 자기 폴더를 컨텍스트로 따로 빌드한다.
+.git
+.venv
+**/__pycache__
+**/.pytest_cache
+src/frontend
+.env

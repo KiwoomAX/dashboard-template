@@ -1,0 +1,22 @@
+# 본부 대시보드 — 컨테이너 둘을 한 명령으로 실행한다.
+#
+#   docker compose up -d --build   → http://localhost:3000
+#
+# frontend(nginx)가 입구다. 화면 파일을 내보내고, /api/ 로 시작하는 요청만 backend 로 넘긴다.
+# container_name 을 두지 않는다. 한 서버에 본부 대시보드가 여럿 떠도 이름이 겹치지 않게
+# compose 가 레포 폴더 이름을 앞에 붙인다(예: dashboard-strategy-backend-1).
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: src/backend/Dockerfile
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./src/frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

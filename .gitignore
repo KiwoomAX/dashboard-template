@@ -1,0 +1,15 @@
+# 파이썬
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# 노드
+node_modules/
+dist/
+*.tsbuildinfo
+
+# 환경 변수와 인증서 — 레포에 올리지 않는다
+.env
+certs/*
+!certs/.gitkeep
