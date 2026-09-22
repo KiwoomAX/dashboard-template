@@ -1,0 +1,175 @@
+/* ══════════════════════════════════════════════════════════════════════
+   대시보드 토큰 — 셸 파일이다. 고치지 않는다.
+
+   값은 HTML 목업(dash-kit.css)과 같다. 두 층으로 둔다.
+     · :root 블록 — 값을 가진 원시 층. 셸 CSS 가 var(--bg-rail) 처럼 직접 쓴다.
+     · 맨 끝 @theme — Tailwind 유틸리티 이름을 붙이는 층. 내용 구획은 이 이름을 쓴다
+       (bg-surface · text-on-surface · border-outline · text-rise …).
+
+   낮/밤: 기본은 OS 설정을 따르고, 사이드바 하단 설정 판에서 고르면 <html data-theme> 로
+   덮어쓴다. 강조가 무채색이라 두 테마가 서로 뒤집힌 값을 쓴다.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── 낮 (기본) ─────────────────────────────────────────────── */
+:root {
+  --brand: #1A1A1A;
+  --brand-fill: #1A1A1A;
+  --brand-fill-hover: #33353A;
+  --on-brand: #FFFFFF;
+  /* 포커스 링. 키보드로 어디 있는지 알리는 표시라 선택 면(--sel-weak)보다 진하다 */
+  --brand-weak: rgba(0, 0, 0, .055);
+  /* 「고른 것」에 까는 면. 선택은 굵은 글자가 함께 말하므로 면은 옅게 둔다 */
+  --sel-weak: rgba(0, 0, 0, .034);
+  /* 사이드바 안의 호버 면. 불투명 회색(--bg-hover)을 쓰면 사이드바 그라데이션을 덮고,
+     선택 면보다 진해져 지나가는 항목이 보고 있는 항목보다 도드라진다 */
+  --hover-weak: rgba(0, 0, 0, .014);
+  /* 프로필 아바타 — 누구나 같은 남색(CI 네이비)이고 밤에도 바뀌지 않는다 */
+  --avatar-bg: #00468B;
+  --on-avatar: #FFFFFF;
+
+  /* 그래프 선 — UI 강조색(--brand)과 일부러 다르다. 먹색이면 격자·글자에 묻힌다 */
+  --chart-1: #00468B;
+
+  --bg-app: #FFFFFF;
+  /* 사이드바 바탕. 단색으로 둔다 — 스크롤바 썸이 이 값을 border 에 쓰는데 border 에는
+     그라데이션을 넣을 수 없다. 면에 까는 한기는 --rail-tint 가 따로 맡는다 */
+  --bg-rail: #FAFAFA;
+  /* CI 네이비에서 뽑은 아주 옅은 한기. 위에서 시작해 절반쯤에서 무채색으로 풀린다 */
+  --rail-tint: linear-gradient(180deg, #F1F5FB 0%, #FAFAFA 52%, #FAFAFA 100%);
+  --bg-surface: #FFFFFF;
+  --bg-sunken: #F4F4F5;
+  --bg-hover: #F0F0F1;
+
+  --text-primary: #1A1A1A;
+  --text-secondary: #5D5D5D;
+  --text-tertiary: #8E8E8E;
+
+  --border-light: #E5E5E5;
+  --border-medium: #D1D1D1;
+
+  --ok: #2BA84A;
+  --warn: #E89B17;
+  --bad: #E04545;
+  /* 등락 — 국내 주식 관행대로 상승이 붉은 계열, 하락이 푸른 계열이다.
+     상태 3색(ok · warn · bad)과 뜻이 달라 따로 둔다 */
+  --rise: #C93A3A;
+  --fall: #2A5FA0;
+
+  --grid-line: #EDEDED;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-full: 9999px;
+
+  --sp-xs: 4px; --sp-sm: 8px; --sp-md: 16px; --sp-lg: 24px; --sp-xl: 32px;
+
+  --rail-w: 264px;
+  /* 사이드바 머리 칸과 상태바의 높이. 둘은 따로 정한다 */
+  --head-h: 68px;
+  --topbar-h: 56px;
+  --t-fast: .15s ease;
+
+  --lead-tight: 1.2; --lead-snug: 1.5; --lead-relaxed: 1.6;
+}
+
+/* ── 밤 : OS 설정을 따르는 때 ──────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brand: #ECEEF1;
+    --brand-fill: #ECEEF1;
+    --brand-fill-hover: #FFFFFF;
+    --on-brand: #14161A;
+    --brand-weak: rgba(255, 255, 255, .09);
+    --sel-weak: rgba(255, 255, 255, .054);
+    --hover-weak: rgba(255, 255, 255, .026);
+    --chart-1: #6FA8E0;
+
+    --bg-app: #0F1013;
+    --bg-rail: #15171B;
+    /* 밤에는 그라데이션을 쓰지 않는다. 사이드바가 본문보다 이미 밝아 경계가 서 있고,
+       어두운 바탕에 한기를 얹으면 면이 탁해진다. 변수를 지우지 않고 none 으로 둔다 */
+    --rail-tint: none;
+    --bg-surface: #16181C;
+    --bg-sunken: #1C1F24;
+    --bg-hover: #22252B;
+
+    --text-primary: #ECEEF1;
+    --text-secondary: #A3A8B0;
+    --text-tertiary: #717680;
+
+    --border-light: #26292F;
+    --border-medium: #383C44;
+
+    --ok: #4ADE80;
+    --warn: #FBBF4E;
+    --bad: #F87171;
+    --rise: #F08080;
+    --fall: #7BAEE8;
+
+    --grid-line: #23262B;
+  }
+}
+
+/* ── 밤 : 설정 판에서 고른 때 (미디어쿼리를 이긴다) ─────────── */
+:root[data-theme="dark"] {
+  --brand: #ECEEF1;
+  --brand-fill: #ECEEF1;
+  --brand-fill-hover: #FFFFFF;
+  --on-brand: #14161A;
+  --brand-weak: rgba(255, 255, 255, .09);
+  --sel-weak: rgba(255, 255, 255, .054);
+  --hover-weak: rgba(255, 255, 255, .026);
+  --chart-1: #6FA8E0;
+
+  --bg-app: #0F1013;
+  --bg-rail: #15171B;
+  --rail-tint: none;
+  --bg-surface: #16181C;
+  --bg-sunken: #1C1F24;
+  --bg-hover: #22252B;
+
+  --text-primary: #ECEEF1;
+  --text-secondary: #A3A8B0;
+  --text-tertiary: #717680;
+
+  --border-light: #26292F;
+  --border-medium: #383C44;
+
+  --ok: #4ADE80;
+  --warn: #FBBF4E;
+  --bad: #F87171;
+  --rise: #F08080;
+  --fall: #7BAEE8;
+
+  --grid-line: #23262B;
+}
+
+/* ── Tailwind 유틸리티 이름 ─────────────────────────────────────
+   inline 이라 유틸리티가 var(--bg-surface) 를 그대로 심는다. 그래서 낮/밤이 바뀌면
+   유틸리티 색도 함께 바뀐다. Tailwind 기본 색(red-500 등)은 지우지 않는다 —
+   내용 구획의 색 규칙은 권장이고, 권장은 스킬이 말한다. */
+@theme inline {
+  --color-brand: var(--brand);
+  --color-on-brand: var(--on-brand);
+
+  --color-surface: var(--bg-surface);
+  --color-surface-app: var(--bg-app);
+  --color-surface-sunken: var(--bg-sunken);
+  --color-surface-hover: var(--bg-hover);
+
+  --color-on-surface: var(--text-primary);
+  --color-on-surface-variant: var(--text-secondary);
+  --color-on-surface-tertiary: var(--text-tertiary);
+
+  --color-outline: var(--border-light);
+  --color-outline-strong: var(--border-medium);
+
+  --color-status-ok: var(--ok);
+  --color-status-warn: var(--warn);
+  --color-status-bad: var(--bad);
+
+  --color-rise: var(--rise);
+  --color-fall: var(--fall);
+  --color-chart-1: var(--chart-1);
+  --color-grid: var(--grid-line);
+}
