@@ -1,0 +1,12 @@
+# 프론트 빌드에 올리는 것. 전부 막고 실제로 COPY 하는 것만 연다.
+# 레포 맨 위의 .dockerignore 는 백엔드 빌드용이다. 이 파일이 옆 Dockerfile 에만 적용된다.
+*
+!certs/
+!src/frontend/
+src/frontend/node_modules
+src/frontend/dist
+src/frontend/*.tsbuildinfo
+
+# 마지막 방어선 — 위에서 실수로 열어도 비밀 파일은 빌드에 올라가지 않는다
+.env
+**/*.pem

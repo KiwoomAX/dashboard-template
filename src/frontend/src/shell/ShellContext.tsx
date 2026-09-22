@@ -2,8 +2,8 @@
 
    App.tsx 가 메뉴 목록(src/routes.tsx)과 대시보드 설정(src/dashboard.config.ts)을 넘기고,
    사이드바와 상태바가 여기서 읽는다. */
-import { createContext, useContext, type ReactNode } from 'react';
-import type { MenuEntry } from './menu';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
+import { checkMenu, type MenuEntry } from './menu';
 
 export type OtherDashboard = { name: string; url: string };
 
@@ -18,7 +18,17 @@ type Shell = { menu: MenuEntry[]; config: DashboardConfig };
 
 const ShellContext = createContext<Shell | null>(null);
 
+/* 같은 목록을 두 번 알리지 않는다. 개발 모드(StrictMode)는 effect 를 두 번 실행한다 */
+const checked = new WeakSet<MenuEntry[]>();
+
 export function ShellProvider({ menu, config, children }: Shell & { children: ReactNode }) {
+  /* 메뉴 규칙을 어긴 줄이 있으면 콘솔에 알린다. 화면은 적은 그대로 그린다 */
+  useEffect(() => {
+    if (checked.has(menu)) return;
+    checked.add(menu);
+    checkMenu(menu).forEach((warning) => console.warn(`[shell] ${warning}`));
+  }, [menu]);
+
   return <ShellContext.Provider value={{ menu, config }}>{children}</ShellContext.Provider>;
 }
 

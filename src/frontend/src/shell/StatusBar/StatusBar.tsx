@@ -1,8 +1,9 @@
 /* 상태바 — 셸 파일이다. 고치지 않는다.
    왼쪽에 「조직 이름 › 제목」과 기준 시각을 한 줄로 두고, 오른쪽에 화면 고유 단추를 둔다. */
 import { Bell as BellIcon, ChevronDown, Clock, RefreshCw, type LucideIcon } from 'lucide-react';
-import { useEffect, type RefObject } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useDrawer } from '../Drawer/Drawer';
 import { flatten, isActive, isOpenItem } from '../menu';
 import { useShell } from '../ShellContext';
 
@@ -25,19 +26,12 @@ export type StatusBarProps = {
   actions?: StatusBarAction[];
 };
 
-/* 알림 종 — DashboardLayout 이 서랍 상태와 함께 넘긴다. 페이지가 직접 넘기는 값이 아니다 */
-type Bell = {
-  count?: number;
-  open: boolean;
-  onToggle: () => void;
-  ref: RefObject<HTMLButtonElement>;
-};
-
 const REFRESH_LABEL = '새로고침';
 const REFRESH_TIP = '지금 다시 불러오기';
 
-export default function StatusBar({ title, asof, cycle, refresh, actions, bell }: StatusBarProps & { bell?: Bell }) {
+export default function StatusBar({ title, asof, cycle, refresh, actions }: StatusBarProps) {
   const { menu, config } = useShell();
+  const drawer = useDrawer();
   const { pathname } = useLocation();
 
   /* 경로 표시는 지금 주소가 메뉴에 있을 때만 붙인다. 없는 길을 지어내지 않는다 */
@@ -89,22 +83,20 @@ export default function StatusBar({ title, asof, cycle, refresh, actions, bell }
           <RefreshCw size={16} className="ic" />
         </button>
       )}
-      {/* 건수 배지는 「안 본 것이 남았다」는 뜻이라 의미색(--bad)을 쓴다 */}
-      {bell && (
-        <button
-          className="icon-btn side-toggle"
-          type="button"
-          ref={bell.ref}
-          aria-controls="side"
-          aria-expanded={bell.open}
-          aria-label="알림"
-          title="알림"
-          onClick={bell.onToggle}
-        >
-          <BellIcon size={16} className="ic" />
-          {bell.count ? <span className="cnt">{bell.count}</span> : null}
-        </button>
-      )}
+      {/* 알림 종은 모든 페이지에 있다. 건수 배지는 「안 본 것이 남았다」는 뜻이라 의미색(--bad)을 쓴다 */}
+      <button
+        className="icon-btn side-toggle"
+        type="button"
+        ref={drawer.bellRef}
+        aria-controls="side"
+        aria-expanded={drawer.open}
+        aria-label="알림"
+        title="알림"
+        onClick={drawer.toggle}
+      >
+        <BellIcon size={16} className="ic" />
+        {drawer.count > 0 && <span className="cnt">{drawer.count}</span>}
+      </button>
     </header>
   );
 }

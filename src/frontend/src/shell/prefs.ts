@@ -7,6 +7,9 @@ import { useEffect, useState } from 'react';
 
 export const THEME_KEY = 'kw-division-dashboard-theme';
 export const RAIL_KEY = 'kw-division-dashboard-rail';
+/* 알림 서랍 여닫힘. 첫 페인트 전에 걸 필요가 없어 index.html 스크립트에는 없다 —
+   알림 서랍은 앱이 처음 그릴 때 저장값을 읽어 바로 그 상태로 그린다 */
+export const SIDE_KEY = 'kw-division-dashboard-side';
 
 export type Theme = 'light' | 'dark';
 

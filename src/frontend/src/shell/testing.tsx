@@ -9,6 +9,7 @@ import ShellRoutes from './ShellRoutes';
 
 export const Page = () => <DashboardLayout title="페이지" />;
 const DefaultHome = () => <DashboardLayout title="첫 화면" />;
+const DefaultAlerts = () => <p>알림이 없습니다.</p>;
 
 export const sampleMenu: MenuEntry[] = [
   {
@@ -27,11 +28,12 @@ export function renderShell({
   menu = sampleMenu,
   config = { org: '경영전략본부', others: [] },
   home = DefaultHome,
-}: { path?: string; menu?: MenuEntry[]; config?: DashboardConfig; home?: ComponentType } = {}) {
+  alerts = DefaultAlerts,
+}: { path?: string; menu?: MenuEntry[]; config?: DashboardConfig; home?: ComponentType; alerts?: ComponentType } = {}) {
   return render(
     <MemoryRouter initialEntries={[path]}>
       <ShellProvider menu={menu} config={config}>
-        <ShellRoutes home={home} />
+        <ShellRoutes home={home} alerts={alerts} />
       </ShellProvider>
     </MemoryRouter>,
   );

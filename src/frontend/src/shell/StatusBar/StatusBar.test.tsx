@@ -60,12 +60,12 @@ describe('새로고침', () => {
     fireEvent.click(screen.getByRole('button', { name: '새로고침' }));
     expect(refresh).toHaveBeenCalledOnce();
     expect(container.querySelector('.asof .asof-refresh')).not.toBeNull();
-    expect(container.querySelector('.topbar > .icon-btn')).toBeNull();
+    expect(container.querySelector('.topbar > .icon-btn[aria-label="새로고침"]')).toBeNull();
   });
 
   test('기준 시각이 없으면 오른쪽 아이콘 줄로 간다', () => {
     const { container } = renderStatus({ refresh: () => {} });
-    expect(container.querySelector('.topbar > .icon-btn')).toHaveAttribute('aria-label', '새로고침');
+    expect(container.querySelector('.topbar > .icon-btn[aria-label="새로고침"]')).not.toBeNull();
   });
 
   test('함수를 넘기지 않으면 단추가 없다', () => {

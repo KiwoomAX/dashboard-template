@@ -3,20 +3,38 @@
 #   docker compose up -d --build   → http://localhost:3000
 #
 # frontend(nginx)가 입구다. 화면 파일을 내보내고, /api/ 로 시작하는 요청만 backend 로 넘긴다.
-# container_name 을 두지 않는다. 한 서버에 본부 대시보드가 여럿 떠도 이름이 겹치지 않게
-# compose 가 레포 폴더 이름을 앞에 붙인다(예: dashboard-strategy-backend-1).
+#
+# 서버에 배포할 때는 배포 스킬(kw-devops 플러그인의 deploying-kiwoom-service)이 이 파일을 고친다.
+# 레포 이름으로 name 과 container_name 을 채우고, 포트를 AX 대역(9000–9199)에서 골라 바꾸고,
+# Jenkinsfile 을 쓴다. 템플릿에 container_name 이 없는 까닭은 레포마다 이름이 달라서다.
 services:
   backend:
     build:
       context: .
       dockerfile: src/backend/Dockerfile
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   frontend:
     build:
-      context: ./src/frontend
+      context: .
+      dockerfile: src/frontend/Dockerfile
     ports:
       - "3000:80"
     depends_on:
       - backend
     restart: unless-stopped
+    # nginx 를 거쳐 백엔드의 /api/health 를 부른다. 젠킨스는 컨테이너 하나의 헬스만 보는데,
+    # 이 검사 하나로 화면 · 프록시 · 백엔드가 모두 살아 있는지 확인된다.
+    # localhost 대신 127.0.0.1 을 쓴다 — localhost 는 ::1 로 먼저 풀려 IPv4 에만 붙은 nginx 가 거부한다.
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s

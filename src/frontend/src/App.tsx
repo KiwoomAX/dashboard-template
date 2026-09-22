@@ -1,3 +1,4 @@
+import Alerts from './alerts';
 import { dashboard } from './dashboard.config';
 import Home from './pages/Home';
 import { menu } from './routes';
@@ -7,7 +8,7 @@ import ShellRoutes from './shell/ShellRoutes';
 export default function App() {
   return (
     <ShellProvider menu={menu} config={dashboard}>
-      <ShellRoutes home={Home} />
+      <ShellRoutes home={Home} alerts={Alerts} />
     </ShellProvider>
   );
 }

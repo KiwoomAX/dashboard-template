@@ -36,3 +36,31 @@ export function isActive(item: OpenItem, pathname: string): boolean {
 export function flatten(menu: MenuEntry[]): MenuItem[] {
   return menu.flatMap((entry) => (isCategory(entry) ? entry.items : [entry]));
 }
+
+/* 타입이 막지 못하는 규칙 셋을 검사해 경고 문장을 돌려준다. 고쳐서 그리지는 않는다 —
+   셸이 순서를 몰래 바꾸면 적은 목록과 화면이 달라 보여 더 찾기 어렵다.
+   이름은 값으로 들어오므로 조사를 붙이지 않고 문장 끝에 둔다. */
+export function checkMenu(menu: MenuEntry[]): string[] {
+  const warnings: string[] = [];
+
+  let singleSeen = false;
+  for (const entry of menu) {
+    if (!isCategory(entry)) {
+      singleSeen = true;
+      continue;
+    }
+    if (singleSeen) warnings.push(`카테고리는 낱개 기능보다 먼저 적는다 — ${entry.cat}`);
+    if (entry.items.length < 2) {
+      warnings.push(`카테고리 안 기능이 둘 미만이면 묶지 말고 낱개로 둔다 — ${entry.cat} ${entry.items.length}개`);
+    }
+  }
+
+  const seen = new Map<string, string>();
+  for (const item of flatten(menu).filter(isOpenItem)) {
+    const first = seen.get(item.path);
+    if (first) warnings.push(`주소는 기능마다 달라야 한다 — ${item.path} : ${first} · ${item.name}`);
+    else seen.set(item.path, item.name);
+  }
+
+  return warnings;
+}
