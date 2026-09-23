@@ -34,22 +34,25 @@ describe('타입이 막지 못하는 규칙은 경고한다', () => {
   const kpi = { name: '실적 · KPI 관리', path: '/kpi', page: P };
   const tasks = { name: '전략과제 관리', path: '/tasks', page: P };
   const status = { name: '경영 현황', path: '/status', page: P };
+  const audit = { name: '감사 이력', path: '/audit', page: P };
 
   test('규칙을 지킨 목록과 빈 목록은 경고가 없다', () => {
     expect(checkMenu([{ cat: '계획 · 실적', items: [kpi, tasks] }, status])).toEqual([]);
     expect(checkMenu([])).toEqual([]);
   });
 
-  test('카테고리가 낱개 기능 뒤에 오면 알린다', () => {
-    expect(checkMenu([status, { cat: '계획 · 실적', items: [kpi, tasks] }])).toEqual([
-      '카테고리는 낱개 기능보다 먼저 적는다 — 계획 · 실적',
-    ]);
+  test('낱개 기능이 카테고리 앞에 와도 경고가 없다', () => {
+    expect(checkMenu([status, { cat: '계획 · 실적', items: [kpi, tasks] }])).toEqual([]);
   });
 
-  test('카테고리 안 기능이 하나면 알린다', () => {
-    expect(checkMenu([{ cat: '계획 · 실적', items: [kpi] }])).toEqual([
-      '카테고리 안 기능이 둘 미만이면 묶지 말고 낱개로 둔다 — 계획 · 실적 1개',
-    ]);
+  test('카테고리 안 기능이 하나여도 경고가 없다', () => {
+    expect(checkMenu([{ cat: '계획 · 실적', items: [kpi] }])).toEqual([]);
+  });
+
+  test('낱개 기능이 카테고리 사이에 끼면 알린다', () => {
+    expect(
+      checkMenu([{ cat: '계획 · 실적', items: [kpi, tasks] }, status, { cat: '지배구조', items: [audit] }]),
+    ).toEqual(['낱개 기능은 카테고리 사이에 끼우지 않는다 — 경영 현황']);
   });
 
   test('두 기능이 같은 주소를 쓰면 알린다 — 카테고리 안에 든 기능도 센다', () => {
@@ -61,14 +64,18 @@ describe('타입이 막지 못하는 규칙은 경고한다', () => {
 
   test('셸이 메뉴를 받으면 콘솔에 한 번 알린다', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const menu: MenuEntry[] = [status, { cat: '계획 · 실적', items: [kpi, tasks] }];
+    const menu: MenuEntry[] = [
+      { cat: '계획 · 실적', items: [kpi, tasks] },
+      status,
+      { cat: '지배구조', items: [audit] },
+    ];
     const config = { org: '경영전략본부', others: [] };
 
     const { rerender } = render(<ShellProvider menu={menu} config={config}>{null}</ShellProvider>);
     rerender(<ShellProvider menu={menu} config={config}>{null}</ShellProvider>);
 
     expect(warn).toHaveBeenCalledTimes(1);
-    expect(warn).toHaveBeenCalledWith('[shell] 카테고리는 낱개 기능보다 먼저 적는다 — 계획 · 실적');
+    expect(warn).toHaveBeenCalledWith('[shell] 낱개 기능은 카테고리 사이에 끼우지 않는다 — 경영 현황');
     warn.mockRestore();
   });
 });
