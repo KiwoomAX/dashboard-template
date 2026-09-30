@@ -15,7 +15,10 @@
   body {
     /* 사내 도구 — 데스크톱 전용이다. 좁아지면 가로 스크롤을 준다 */
     min-width: 1120px;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+    /* 사내 PC 에 기본으로 깔린 서체를 쓴다. 웹폰트를 내보내지 않으므로 파일이 없는 서체를
+       앞에 두면 PC 마다 다른 서체로 그려진다 */
+    font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', -apple-system,
+      BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: var(--bg-app);
