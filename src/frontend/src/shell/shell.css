@@ -23,6 +23,8 @@
     -moz-osx-font-smoothing: grayscale;
     background: var(--bg-app);
     color: var(--text-primary);
+    /* 금액과 비율의 자릿수를 맞춘다. 화면마다 적지 않아도 표와 지표가 저절로 맞는다 */
+    font-variant-numeric: tabular-nums;
     font-size: 14px;
     line-height: var(--lead-relaxed);
     transition: background var(--t-fast), color var(--t-fast);
