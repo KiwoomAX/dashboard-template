@@ -34,6 +34,10 @@
   --accent: #3F5A80;
   --on-accent: #FFFFFF;
   --accent-weak: #E8EBF0;
+  /* 커서가 올라왔을 때와 누르고 있는 동안. 더 강조하는 것이 아니라 어디에 있는지 알리는
+     되먹임이라, 바탕에서 또렷해지는 쪽으로 간다 — 낮은 어두워지고 밤은 밝아진다 */
+  --accent-hover: #35496A;
+  --accent-active: #2C3D58;
 
   /* 그래프 선 — 겹치지 않는 차트(도넛 · 단일 막대)는 1·2순위와 회색 셋만 쓴다.
      3순위 이상은 겹치는 차트에만 쓰고, 넷을 넘으면 색을 더 만들지 않는다 */
@@ -64,6 +68,7 @@
   --text-secondary: #5D5D5D;
   --text-tertiary: #8E8E8E;
   --link: #5D5D5D;
+  --link-hover: #3F5A80;
   --focus: #2A5FA0;
   --disabled: #8E8E8E;
 
@@ -104,6 +109,26 @@
   --radius-md: 10px;
   --radius-full: 9999px;
 
+  /* 키보드로 어디에 있는지 알리는 표시. 두께와 간격을 화면마다 다르게 적지 않는다 */
+  --focus-width: 2px;
+  --focus-offset: 1px;
+
+  /* 그림자는 「떠 있다」는 신호다. 잠깐 나타났다 사라지는 것에만 쓰고
+     카드와 표와 지표 칸에는 두지 않는다 */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, .14);
+
+  /* 겹치는 차례. 숫자를 코드에 직접 적지 않는다 */
+  --z-rail: 20;
+  --z-drawer: 60;
+  --z-modal: 80;
+
+  /* 맑은 고딕은 Semilight · Regular · Bold 세 벌뿐이다. 500 은 400 으로, 600 은 700 으로
+     그려지므로 그 둘은 이름을 두지 않는다 */
+  --w-light: 300;
+  --w-regular: 400;
+  --w-bold: 700;
+
   --sp-xs: 4px; --sp-sm: 8px; --sp-md: 16px; --sp-lg: 24px; --sp-xl: 32px;
 
   --rail-w: 264px;
@@ -129,6 +154,8 @@
     --accent: #7FA3D6;
     --on-accent: #12161C;
     --accent-weak: #232932;
+    --accent-hover: #93B2DF;
+    --accent-active: #A6C0E6;
 
     --chart-1: #5E9BEF;
     --chart-2: #17A79F;
@@ -154,6 +181,7 @@
     --text-secondary: #A8B0BC;
     --text-tertiary: #7C8490;
     --link: #A8B0BC;
+    --link-hover: #7FA3D6;
     --focus: #6FB0FF;
     --disabled: #7C8490;
 
@@ -178,6 +206,9 @@
     --fall-weak: #222B35;
 
     --grid-line: #262A31;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, .40);
+    --shadow-md: 0 6px 18px rgba(0, 0, 0, .55);
   }
 }
 
@@ -194,6 +225,8 @@
   --accent: #7FA3D6;
   --on-accent: #12161C;
   --accent-weak: #232932;
+  --accent-hover: #93B2DF;
+  --accent-active: #A6C0E6;
 
   --chart-1: #5E9BEF;
   --chart-2: #17A79F;
@@ -217,6 +250,7 @@
   --text-secondary: #A8B0BC;
   --text-tertiary: #7C8490;
   --link: #A8B0BC;
+  --link-hover: #7FA3D6;
   --focus: #6FB0FF;
   --disabled: #7C8490;
 
@@ -241,6 +275,9 @@
   --fall-weak: #222B35;
 
   --grid-line: #262A31;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, .40);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, .55);
 }
 
 /* ── 팔레트 ────────────────────────────────────────────────────
@@ -301,8 +338,19 @@
   --color-on-surface-variant: var(--text-secondary);
   --color-on-surface-tertiary: var(--text-tertiary);
   --color-link: var(--link);
+  --color-link-hover: var(--link-hover);
   --color-focus: var(--focus);
   --color-disabled: var(--disabled);
+
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-active: var(--accent-active);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+
+  --font-weight-light: var(--w-light);
+  --font-weight-regular: var(--w-regular);
+  --font-weight-bold: var(--w-bold);
 
   --color-outline: var(--border-light);
   --color-outline-strong: var(--border-medium);

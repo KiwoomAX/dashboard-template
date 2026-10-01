@@ -134,7 +134,7 @@
 .rail-head .co {
   display: block;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: var(--w-bold);
   letter-spacing: .02em;
   color: var(--text-tertiary);
   line-height: 1.35;
@@ -143,7 +143,7 @@
 .rail-head .div {
   display: block;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: var(--w-bold);
   letter-spacing: -.01em;
   color: var(--text-secondary);
   line-height: 1.25;
@@ -195,7 +195,7 @@
 }
 .org-pop {
   position: absolute;
-  z-index: 60;
+  z-index: var(--z-drawer);
   left: 10px;
   width: 238px;
   display: none;
@@ -210,7 +210,7 @@
 .org-pop .lb {
   padding: 6px 10px 5px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
   letter-spacing: .06em;
   color: var(--text-tertiary);
 }
@@ -230,7 +230,7 @@
 }
 .org-pop a.is-cur {
   color: var(--brand);
-  font-weight: 700;
+  font-weight: var(--w-bold);
 }
 .org-pop a .chk {
   margin-left: auto;
@@ -270,7 +270,7 @@
   padding: 0 8px;
   margin-bottom: 6px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
   letter-spacing: .06em;
   color: var(--text-tertiary);
   border: 0;
@@ -312,7 +312,7 @@
   padding: 0 10px 0 18px;
   margin: var(--sp-md) 0 var(--sp-xs);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--w-bold);
   color: var(--text-tertiary);
   line-height: var(--lead-snug);
 }
@@ -345,7 +345,7 @@
   border-radius: var(--radius-sm);
   background: transparent;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--w-regular);
   color: var(--text-secondary);
   text-align: left;
   line-height: var(--lead-snug);
@@ -363,7 +363,7 @@
 /* 지금 보는 항목 — 면과 굵은 글자로만 말한다 */
 .nav-item.is-on {
   color: var(--brand);
-  font-weight: 700;
+  font-weight: var(--w-bold);
   background: var(--sel-weak);
 }
 /* 권한 없는 기능 — 감추지 않고 흐린 글자와 자물쇠로 보여 준다 */
@@ -420,7 +420,7 @@
   background: var(--avatar-bg);
   color: var(--on-avatar);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
 }
 /* 이름과 아이디를 한 줄에 둔다. 글자 크기가 달라 baseline 으로 맞춘다 */
 .rail-me .bd {
@@ -433,7 +433,7 @@
 .rail-me .nm {
   min-width: 0;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: var(--w-bold);
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -471,7 +471,7 @@
    프로필 위로 열린다. 본부 전환 드롭다운과 같은 생김새다. */
 .rail-pop {
   position: absolute;
-  z-index: 60;
+  z-index: var(--z-drawer);
   left: 10px;
   right: 10px;
   bottom: calc(100% - 6px);
@@ -563,7 +563,7 @@
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: var(--z-rail);
   display: flex;
   align-items: center;
   gap: var(--sp-md);
@@ -590,7 +590,7 @@
 .topbar h1 {
   margin: 0;
   font-size: 17px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
   letter-spacing: -.02em;
   line-height: var(--lead-tight);
 }
@@ -601,7 +601,7 @@
   align-items: center;
   gap: 2px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--w-regular);
   color: var(--text-tertiary);
   white-space: nowrap;
 }
@@ -688,7 +688,7 @@
   background: var(--bad);
   color: #fff;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -711,7 +711,7 @@
   background: transparent;
   color: var(--text-secondary);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--w-regular);
   white-space: nowrap;
   transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
 }
