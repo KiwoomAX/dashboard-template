@@ -243,6 +243,41 @@
   --grid-line: #262A31;
 }
 
+/* ── 팔레트 ────────────────────────────────────────────────────
+   차트 계열과 상승색만 한 벌 더 둔다. 나머지 토큰은 두 팔레트가 같다.
+
+   기본은 위에 적은 슬레이트 계열이다. 옛 대시보드가 쓰던 키움 남색과 핑크를 살리려면
+   대시보드의 index.html 에서 <html data-palette="kiwoom"> 으로 켠다. 적지 않으면 기본이다.
+
+   하락색과 배경과 표 머리와 회색 셋은 두 팔레트가 같다. 상승만 팔레트를 따르므로,
+   한 대시보드 안에서는 상승이 늘 한 색이다. */
+:root[data-palette="kiwoom"] {
+  --chart-1: #001D52;
+  --chart-2: #E8196C;
+  --rise: #E8196C;
+  /* 흰 글자를 얹는 면이라 상승색보다 어둡다 — #E8196C 는 흰 글자 대비가 4.39 뿐이다 */
+  --rise-fill: #C9185C;
+  --rise-weak: #FCE3ED;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="kiwoom"]:not([data-theme="light"]) {
+    --chart-1: #608CD1;
+    --chart-2: #F64A93;
+    --rise: #F64A93;
+    --rise-fill: #F64A93;
+    --rise-weak: #311E2A;
+  }
+}
+
+:root[data-palette="kiwoom"][data-theme="dark"] {
+  --chart-1: #608CD1;
+  --chart-2: #F64A93;
+  --rise: #F64A93;
+  --rise-fill: #F64A93;
+  --rise-weak: #311E2A;
+}
+
 /* ── Tailwind 유틸리티 이름 ─────────────────────────────────────
    inline 이라 유틸리티가 var(--bg-surface) 를 그대로 심는다. 그래서 낮/밤이 바뀌면
    유틸리티 색도 함께 바뀐다. Tailwind 기본 색(red-500 등)은 지우지 않는다 —
