@@ -48,6 +48,9 @@
   --chart-gray-1: #7C8DA7;
   --chart-gray-2: #9FAEC3;
   --chart-gray-3: #C5CFDC;
+  /* 막대 위를 지나는 선처럼 겹쳐 그릴 때의 2순위. 낮은 흰 카드라 밝히면 선이 사라지므로
+     2순위를 그대로 쓰고, 밤은 어두운 카드라 흰색으로 띄운다 */
+  --chart-2-over: var(--chart-2);
 
   --bg-app: #FFFFFF;
   /* 사이드바 바탕. 단색으로 둔다 — 스크롤바 썸이 이 값을 border 에 쓰는데 border 에는
@@ -157,13 +160,14 @@
     --accent-hover: #93B2DF;
     --accent-active: #A6C0E6;
 
-    --chart-1: #5E9BEF;
+    --chart-1: #2E7DEA;
     --chart-2: #17A79F;
     --chart-3: #9463D9;
     --chart-4: #C6635E;
     --chart-gray-1: #B0B5BA;
     --chart-gray-2: #7E848A;
     --chart-gray-3: #4E5359;
+    --chart-2-over: #FFFFFF;
 
     --bg-app: #0F1013;
     --bg-rail: #121418;
@@ -228,13 +232,14 @@
   --accent-hover: #93B2DF;
   --accent-active: #A6C0E6;
 
-  --chart-1: #5E9BEF;
+  --chart-1: #2E7DEA;
   --chart-2: #17A79F;
   --chart-3: #9463D9;
   --chart-4: #C6635E;
   --chart-gray-1: #B0B5BA;
   --chart-gray-2: #7E848A;
   --chart-gray-3: #4E5359;
+  --chart-2-over: #FFFFFF;
 
   --bg-app: #0F1013;
   --bg-rail: #121418;
@@ -376,6 +381,7 @@
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
+  --color-chart-2-over: var(--chart-2-over);
   --color-chart-gray-1: var(--chart-gray-1);
   --color-chart-gray-2: var(--chart-gray-2);
   --color-chart-gray-3: var(--chart-gray-3);
