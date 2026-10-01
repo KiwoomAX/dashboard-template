@@ -762,3 +762,17 @@
   overscroll-behavior: contain;
   padding: 8px 0 var(--sp-lg);
 }
+
+/* ── 모션 줄이기 ───────────────────────────────────────────────
+   운영체제에서 「동작 줄이기」를 켠 사람에게는 전환과 애니메이션을 끈다. 어지럼증이 있는
+   사람을 위한 설정이다. 셸이 여기 한 번 적어 두므로 내용 구획이 전환을 더해도 함께 걸린다. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
