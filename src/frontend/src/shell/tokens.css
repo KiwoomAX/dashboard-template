@@ -41,8 +41,8 @@
 
   /* 그래프 선 — 겹치지 않는 차트(도넛 · 단일 막대)는 1·2순위와 회색 셋만 쓴다.
      3순위 이상은 겹치는 차트에만 쓰고, 넷을 넘으면 색을 더 만들지 않는다 */
-  --chart-1: #001D52;
-  --chart-2: #E8196C;
+  --chart-1: #3F5A80;
+  --chart-2: #009E98;
   --chart-3: #8E44AD;
   --chart-4: #B0453F;
   --chart-gray-1: #7C8DA7;
@@ -99,11 +99,11 @@
      자금 유입과 유출도 등락이므로 같은 값을 쓴다.
      글자는 --rise · --fall 을 쓰고, 흰 글자를 얹는 면과 도형은 --rise-fill · --fall-fill 을
      쓴다. 밤에는 면 위에 흰 글자를 얹지 않으므로 둘이 같은 값이다 */
-  --rise: #E8196C;
+  --rise: #C93A3A;
   --fall: #2A5FA0;
-  --rise-fill: #C9185C;
+  --rise-fill: #B0453F;
   --fall-fill: #3F6FA8;
-  --rise-weak: #FCE3ED;
+  --rise-weak: #F9E7E7;
   --fall-weak: #E4EBF4;
 
   --grid-line: #EDEDED;
@@ -160,8 +160,8 @@
     --accent-hover: #93B2DF;
     --accent-active: #A6C0E6;
 
-    --chart-1: #608CD1;
-    --chart-2: #F64A93;
+    --chart-1: #2E7DEA;
+    --chart-2: #17A79F;
     --chart-3: #9463D9;
     --chart-4: #C6635E;
     --chart-gray-1: #B0B5BA;
@@ -202,11 +202,11 @@
     --bad: #FF7A6E;
     --bad-weak: #322426;
 
-    --rise: #F64A93;
+    --rise: #FF7A6E;
     --fall: #6FB0FF;
-    --rise-fill: #F64A93;
+    --rise-fill: #FF7A6E;
     --fall-fill: #6FB0FF;
-    --rise-weak: #311E2A;
+    --rise-weak: #322426;
     --fall-weak: #222B35;
 
     --grid-line: #262A31;
@@ -232,8 +232,8 @@
   --accent-hover: #93B2DF;
   --accent-active: #A6C0E6;
 
-  --chart-1: #608CD1;
-  --chart-2: #F64A93;
+  --chart-1: #2E7DEA;
+  --chart-2: #17A79F;
   --chart-3: #9463D9;
   --chart-4: #C6635E;
   --chart-gray-1: #B0B5BA;
@@ -272,11 +272,11 @@
   --bad: #FF7A6E;
   --bad-weak: #322426;
 
-  --rise: #F64A93;
+  --rise: #FF7A6E;
   --fall: #6FB0FF;
-  --rise-fill: #F64A93;
+  --rise-fill: #FF7A6E;
   --fall-fill: #6FB0FF;
-  --rise-weak: #311E2A;
+  --rise-weak: #322426;
   --fall-weak: #222B35;
 
   --grid-line: #262A31;
@@ -288,35 +288,36 @@
 /* ── 팔레트 ────────────────────────────────────────────────────
    차트 계열과 상승색만 한 벌 더 둔다. 나머지 토큰은 두 팔레트가 같다.
 
-   기본은 위에 적은 키움 남색과 핑크다. 다른 색을 쓰려면 대시보드의 index.html 에서
-   <html data-palette="slate"> 로 켠다. 적지 않으면 키움이다.
+   기본은 위에 적은 슬레이트 계열이다. 1순위가 남색이고 2순위가 청록이다. 키움 색을 쓰고 싶다고
+   하면 대시보드의 index.html 에서 <html data-palette="kiwoom"> 으로 켠다. 적지 않으면 기본이다.
 
    하락색과 배경과 표 머리와 회색 셋은 두 팔레트가 같다. 상승만 팔레트를 따르므로,
    한 대시보드 안에서는 상승이 늘 한 색이다. */
-:root[data-palette="slate"] {
-  --chart-1: #3F5A80;
-  --chart-2: #009E98;
-  --rise: #C93A3A;
-  --rise-fill: #B0453F;
-  --rise-weak: #F9E7E7;
+:root[data-palette="kiwoom"] {
+  --chart-1: #001D52;
+  --chart-2: #E8196C;
+  --rise: #E8196C;
+  /* 흰 글자를 얹는 면이라 상승색보다 어둡다 — #E8196C 는 흰 글자 대비가 4.39 뿐이다 */
+  --rise-fill: #C9185C;
+  --rise-weak: #FCE3ED;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root[data-palette="slate"]:not([data-theme="light"]) {
-    --chart-1: #2E7DEA;
-    --chart-2: #17A79F;
-    --rise: #FF7A6E;
-    --rise-fill: #FF7A6E;
-    --rise-weak: #322426;
+  :root[data-palette="kiwoom"]:not([data-theme="light"]) {
+    --chart-1: #608CD1;
+    --chart-2: #F64A93;
+    --rise: #F64A93;
+    --rise-fill: #F64A93;
+    --rise-weak: #311E2A;
   }
 }
 
-:root[data-palette="slate"][data-theme="dark"] {
-  --chart-1: #2E7DEA;
-  --chart-2: #17A79F;
-  --rise: #FF7A6E;
-  --rise-fill: #FF7A6E;
-  --rise-weak: #322426;
+:root[data-palette="kiwoom"][data-theme="dark"] {
+  --chart-1: #608CD1;
+  --chart-2: #F64A93;
+  --rise: #F64A93;
+  --rise-fill: #F64A93;
+  --rise-weak: #311E2A;
 }
 
 /* ── Tailwind 유틸리티 이름 ─────────────────────────────────────
