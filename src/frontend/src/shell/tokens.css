@@ -285,39 +285,49 @@
   --shadow-md: 0 6px 18px rgba(0, 0, 0, .55);
 }
 
-/* ── 팔레트 ────────────────────────────────────────────────────
-   차트 계열과 상승색만 한 벌 더 둔다. 나머지 토큰은 두 팔레트가 같다.
+/* ── 키움 색 후보 ───────────────────────────────────────────────
+   기본은 위에 적은 슬레이트 계열이다. 1순위가 남색이고 2순위가 청록이다. 옛 대시보드가 쓰던
+   키움 남색과 핑크는 아래에 -kiwoom 이름으로 함께 둔다. 켜는 스위치는 없다. 쓰겠다고 하면
+   대시보드가 자기 CSS 파일에서 다섯 이름을 아래 토막대로 되가리킨다.
 
-   기본은 위에 적은 슬레이트 계열이다. 1순위가 남색이고 2순위가 청록이다. 키움 색을 쓰고 싶다고
-   하면 대시보드의 index.html 에서 <html data-palette="kiwoom"> 으로 켠다. 적지 않으면 기본이다.
+     :root,
+     :root[data-theme="dark"] { --chart-1: var(--chart-1-kiwoom); --chart-2: var(--chart-2-kiwoom);
+       --rise: var(--rise-kiwoom); --rise-fill: var(--rise-fill-kiwoom); --rise-weak: var(--rise-weak-kiwoom); }
+     @media (prefers-color-scheme: dark) {
+       :root:not([data-theme="light"]) { 같은 다섯 줄 }
+     }
 
-   하락색과 배경과 표 머리와 회색 셋은 두 팔레트가 같다. 상승만 팔레트를 따르므로,
-   한 대시보드 안에서는 상승이 늘 한 색이다. */
-:root[data-palette="kiwoom"] {
-  --chart-1: #001D52;
-  --chart-2: #E8196C;
-  --rise: #E8196C;
+   선택자를 셸과 같은 모양으로 맞추는 까닭은 :root[data-theme="dark"] 가 :root 보다 점수가 높아서다.
+   평범한 :root 한 블록만 적으면 낮에만 바뀌고 밤에는 셸 값이 그대로 나온다.
+
+   후보도 테마마다 값을 보유하므로 되가리키기만 하면 낮과 밤이 함께 따라온다. 하락색과 배경과
+   표 머리와 회색 셋은 두 팔레트가 같다. 상승만 팔레트를 따르므로, 한 대시보드 안에서는 상승이
+   늘 한 색이다. */
+:root {
+  --chart-1-kiwoom: #001D52;
+  --chart-2-kiwoom: #E8196C;
+  --rise-kiwoom: #E8196C;
   /* 흰 글자를 얹는 면이라 상승색보다 어둡다 — #E8196C 는 흰 글자 대비가 4.39 뿐이다 */
-  --rise-fill: #C9185C;
-  --rise-weak: #FCE3ED;
+  --rise-fill-kiwoom: #C9185C;
+  --rise-weak-kiwoom: #FCE3ED;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root[data-palette="kiwoom"]:not([data-theme="light"]) {
-    --chart-1: #608CD1;
-    --chart-2: #F64A93;
-    --rise: #F64A93;
-    --rise-fill: #F64A93;
-    --rise-weak: #311E2A;
+  :root:not([data-theme="light"]) {
+    --chart-1-kiwoom: #608CD1;
+    --chart-2-kiwoom: #F64A93;
+    --rise-kiwoom: #F64A93;
+    --rise-fill-kiwoom: #F64A93;
+    --rise-weak-kiwoom: #311E2A;
   }
 }
 
-:root[data-palette="kiwoom"][data-theme="dark"] {
-  --chart-1: #608CD1;
-  --chart-2: #F64A93;
-  --rise: #F64A93;
-  --rise-fill: #F64A93;
-  --rise-weak: #311E2A;
+:root[data-theme="dark"] {
+  --chart-1-kiwoom: #608CD1;
+  --chart-2-kiwoom: #F64A93;
+  --rise-kiwoom: #F64A93;
+  --rise-fill-kiwoom: #F64A93;
+  --rise-weak-kiwoom: #311E2A;
 }
 
 /* ── Tailwind 유틸리티 이름 ─────────────────────────────────────
