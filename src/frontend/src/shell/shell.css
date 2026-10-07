@@ -5,6 +5,18 @@
    유틸리티(레이어 안)보다 늘 이기고, 내용 구획의 클래스가 셸 모양을 바꾸지 못한다.
    ══════════════════════════════════════════════════════════════════════ */
 
+/* ── 전체 배율 ────────────────────────────────────────────────
+   화면 전체를 한 번에 줄인다. 사이드바와 상태바와 내용이 같은 비율로 작아지므로
+   서로의 크기 관계는 달라지지 않는다. 글자 크기 표와 셸의 px 값은 배율 전 값이다.
+   100vh 는 배율 밖의 값이라 그대로 두면 사이드바가 화면 높이의 85% 까지만 그려진다.
+   그래서 vh 를 쓰는 세 곳은 배율로 나눈다. */
+:root {
+  --shell-zoom: 0.85;
+}
+html {
+  zoom: var(--shell-zoom);
+}
+
 /* ── 기본 ─────────────────────────────────────────────────────
    base 레이어에 둔다. 내용 구획은 유틸리티로 이 값들을 덮을 수 있다. */
 @layer base {
@@ -15,11 +27,16 @@
   body {
     /* 사내 도구 — 데스크톱 전용이다. 좁아지면 가로 스크롤을 준다 */
     min-width: 1120px;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+    /* 사내 PC 에 기본으로 깔린 서체를 쓴다. 웹폰트를 내보내지 않으므로 파일이 없는 서체를
+       앞에 두면 PC 마다 다른 서체로 그려진다 */
+    font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', -apple-system,
+      BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: var(--bg-app);
     color: var(--text-primary);
+    /* 금액과 비율의 자릿수를 맞춘다. 화면마다 적지 않아도 표와 지표가 저절로 맞는다 */
+    font-variant-numeric: tabular-nums;
     font-size: 14px;
     line-height: var(--lead-relaxed);
     transition: background var(--t-fast), color var(--t-fast);
@@ -58,7 +75,7 @@
   --side-w: 0px;
   display: grid;
   grid-template-columns: var(--rail-w) 1fr var(--side-w);
-  min-height: 100vh;
+  min-height: calc(100vh / var(--shell-zoom));
   transition: grid-template-columns .2s ease;
 }
 :root[data-rail="collapsed"] .shell {
@@ -82,7 +99,7 @@
   position: sticky;
   top: 0;
   align-self: start;
-  height: 100vh;
+  height: calc(100vh / var(--shell-zoom));
 }
 /* 접힌 사이드바는 64px 인데 오른쪽 선 1px 때문에 안쪽 칸이 63px 이라 가운데가 왼쪽으로
    0.5px 밀린다. 왼쪽에 1px 을 넣어 안쪽 칸의 가운데를 32px 에 맞춘다 */
@@ -131,7 +148,7 @@
 .rail-head .co {
   display: block;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: var(--w-bold);
   letter-spacing: .02em;
   color: var(--text-tertiary);
   line-height: 1.35;
@@ -140,7 +157,7 @@
 .rail-head .div {
   display: block;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: var(--w-bold);
   letter-spacing: -.01em;
   color: var(--text-secondary);
   line-height: 1.25;
@@ -192,7 +209,7 @@
 }
 .org-pop {
   position: absolute;
-  z-index: 60;
+  z-index: var(--z-drawer);
   left: 10px;
   width: 238px;
   display: none;
@@ -207,7 +224,7 @@
 .org-pop .lb {
   padding: 6px 10px 5px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
   letter-spacing: .06em;
   color: var(--text-tertiary);
 }
@@ -227,7 +244,7 @@
 }
 .org-pop a.is-cur {
   color: var(--brand);
-  font-weight: 700;
+  font-weight: var(--w-bold);
 }
 .org-pop a .chk {
   margin-left: auto;
@@ -267,7 +284,7 @@
   padding: 0 8px;
   margin-bottom: 6px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
   letter-spacing: .06em;
   color: var(--text-tertiary);
   border: 0;
@@ -309,7 +326,7 @@
   padding: 0 10px 0 18px;
   margin: var(--sp-md) 0 var(--sp-xs);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: var(--w-bold);
   color: var(--text-tertiary);
   line-height: var(--lead-snug);
 }
@@ -342,7 +359,7 @@
   border-radius: var(--radius-sm);
   background: transparent;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: var(--w-regular);
   color: var(--text-secondary);
   text-align: left;
   line-height: var(--lead-snug);
@@ -360,7 +377,7 @@
 /* 지금 보는 항목 — 면과 굵은 글자로만 말한다 */
 .nav-item.is-on {
   color: var(--brand);
-  font-weight: 700;
+  font-weight: var(--w-bold);
   background: var(--sel-weak);
 }
 /* 권한 없는 기능 — 감추지 않고 흐린 글자와 자물쇠로 보여 준다 */
@@ -417,7 +434,7 @@
   background: var(--avatar-bg);
   color: var(--on-avatar);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
 }
 /* 이름과 아이디를 한 줄에 둔다. 글자 크기가 달라 baseline 으로 맞춘다 */
 .rail-me .bd {
@@ -430,7 +447,7 @@
 .rail-me .nm {
   min-width: 0;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: var(--w-bold);
   color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
@@ -468,7 +485,7 @@
    프로필 위로 열린다. 본부 전환 드롭다운과 같은 생김새다. */
 .rail-pop {
   position: absolute;
-  z-index: 60;
+  z-index: var(--z-drawer);
   left: 10px;
   right: 10px;
   bottom: calc(100% - 6px);
@@ -560,7 +577,7 @@
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: var(--z-rail);
   display: flex;
   align-items: center;
   gap: var(--sp-md);
@@ -587,7 +604,7 @@
 .topbar h1 {
   margin: 0;
   font-size: 17px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
   letter-spacing: -.02em;
   line-height: var(--lead-tight);
 }
@@ -598,7 +615,7 @@
   align-items: center;
   gap: 2px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--w-regular);
   color: var(--text-tertiary);
   white-space: nowrap;
 }
@@ -685,7 +702,7 @@
   background: var(--bad);
   color: #fff;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: var(--w-bold);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -708,7 +725,7 @@
   background: transparent;
   color: var(--text-secondary);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--w-regular);
   white-space: nowrap;
   transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
 }
@@ -742,7 +759,7 @@
   position: sticky;
   top: 0;
   align-self: start;
-  height: 100vh;
+  height: calc(100vh / var(--shell-zoom));
   display: flex;
   flex-direction: column;
 }
@@ -758,4 +775,18 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 8px 0 var(--sp-lg);
+}
+
+/* ── 모션 줄이기 ───────────────────────────────────────────────
+   운영체제에서 「동작 줄이기」를 켠 사람에게는 전환과 애니메이션을 끈다. 어지럼증이 있는
+   사람을 위한 설정이다. 셸이 여기 한 번 적어 두므로 내용 구획이 전환을 더해도 함께 걸린다. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
