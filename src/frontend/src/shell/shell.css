@@ -5,6 +5,18 @@
    유틸리티(레이어 안)보다 늘 이기고, 내용 구획의 클래스가 셸 모양을 바꾸지 못한다.
    ══════════════════════════════════════════════════════════════════════ */
 
+/* ── 전체 배율 ────────────────────────────────────────────────
+   화면 전체를 한 번에 줄인다. 사이드바와 상태바와 내용이 같은 비율로 작아지므로
+   서로의 크기 관계는 달라지지 않는다. 글자 크기 표와 셸의 px 값은 배율 전 값이다.
+   100vh 는 배율 밖의 값이라 그대로 두면 사이드바가 화면 높이의 85% 까지만 그려진다.
+   그래서 vh 를 쓰는 세 곳은 배율로 나눈다. */
+:root {
+  --shell-zoom: 0.85;
+}
+html {
+  zoom: var(--shell-zoom);
+}
+
 /* ── 기본 ─────────────────────────────────────────────────────
    base 레이어에 둔다. 내용 구획은 유틸리티로 이 값들을 덮을 수 있다. */
 @layer base {
@@ -63,7 +75,7 @@
   --side-w: 0px;
   display: grid;
   grid-template-columns: var(--rail-w) 1fr var(--side-w);
-  min-height: 100vh;
+  min-height: calc(100vh / var(--shell-zoom));
   transition: grid-template-columns .2s ease;
 }
 :root[data-rail="collapsed"] .shell {
@@ -87,7 +99,7 @@
   position: sticky;
   top: 0;
   align-self: start;
-  height: 100vh;
+  height: calc(100vh / var(--shell-zoom));
 }
 /* 접힌 사이드바는 64px 인데 오른쪽 선 1px 때문에 안쪽 칸이 63px 이라 가운데가 왼쪽으로
    0.5px 밀린다. 왼쪽에 1px 을 넣어 안쪽 칸의 가운데를 32px 에 맞춘다 */
@@ -747,7 +759,7 @@
   position: sticky;
   top: 0;
   align-self: start;
-  height: 100vh;
+  height: calc(100vh / var(--shell-zoom));
   display: flex;
   flex-direction: column;
 }
