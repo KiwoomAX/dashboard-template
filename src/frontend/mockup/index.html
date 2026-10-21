@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>대시보드 목업</title>
+    <script>
+      /* 템플릿 index.html 의 셸 스크립트와 같다. 첫 페인트 전에 낮/밤과 사이드바 접힘을 건다 */
+      (function () {
+        var root = document.documentElement;
+        var theme = null;
+        var rail = null;
+        try {
+          theme = localStorage.getItem('kw-division-dashboard-theme');
+          rail = localStorage.getItem('kw-division-dashboard-rail');
+        } catch (e) {}
+        var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        root.setAttribute('data-theme', theme === 'light' || theme === 'dark' ? theme : sysDark ? 'dark' : 'light');
+        if (rail === 'collapsed') root.setAttribute('data-rail', 'collapsed');
+      })();
+    </script>
+    <!-- ════ 여기부터 목업 내용 구획의 스타일이다. 고쳐도 된다 ════
+         · 색 · 모서리 · 간격은 토큰 변수로 쓴다: var(--bg-surface) · var(--text-secondary) ·
+           var(--border-light) · var(--radius-md) · var(--sp-md) 같은 이름이다. 낮 · 밤에 맞게 바뀐다.
+         · 선택자는 .content 아래로 묶는다. table · h1 처럼 태그만 쓰면 사이드바 모양까지 바뀐다. -->
+    <style id="mockup-style">
+      .content .card { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: var(--sp-md); }
+      .content .lede { margin: 0 0 var(--sp-md); font-size: 13px; color: var(--text-secondary); }
+      .content table { width: 100%; border-collapse: collapse; }
+      .content th { text-align: left; font-size: 13px; padding: 8px 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border-medium); }
+      .content td { font-size: 14px; padding: 10px 12px; border-bottom: 1px solid var(--border-light); }
+    </style>
+  </head>
+  <body>
+    <!-- ════ 여기부터 목업 내용이다. 고쳐도 된다 ════
+         · mockup-config: 조직 이름과 사이드바 메뉴. 메뉴 줄은 { "name", "path" } 이고, 잠긴 기능은
+           { "name", "locked": true }, 카테고리는 { "cat", "items": [ … ] } 다. 대표 기능 하나가 "/" 다.
+         · <template data-path="…"> 하나가 화면 하나다. 내용 구획에 들어갈 HTML 만 적는다.
+           data-title 은 상태바 제목(없으면 메뉴 이름), data-asof 는 기준 시각이다.
+         · <template id="alerts" data-count="…"> 는 상태바 종을 누르면 열리는 알림 서랍 내용이다.
+         · 사이드바와 상태바는 그리지 않는다. 아래 스크립트가 실제 셸 코드로 그린다. -->
+    <script type="application/json" id="mockup-config">
+      {
+        "org": "경영전략본부",
+        "menu": [
+          { "name": "경영 현황", "path": "/" },
+          { "name": "경영보고서 작성", "path": "/report" }
+        ]
+      }
+    </script>
+
+    <template data-path="/" data-title="경영 현황" data-asof="예시 데이터">
+      <p class="lede">목업 예시 화면입니다. 이 template 안의 HTML 을 바꿔 화면을 그립니다.</p>
+      <div class="card">
+        <table>
+          <thead><tr><th>항목</th><th>계획</th><th>실적</th></tr></thead>
+          <tbody>
+            <tr><td>예시 항목 1</td><td>100</td><td>90</td></tr>
+            <tr><td>예시 항목 2</td><td>200</td><td>210</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
+
+    <template data-path="/report">
+      <p class="lede">두 번째 화면 예시입니다.</p>
+    </template>
+
+    <template id="alerts" data-count="0">
+      <p style="padding: 0 16px; color: var(--text-tertiary)">알림이 없습니다.</p>
+    </template>
+    <!-- ════ 목업 내용 끝 ════ -->
+
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>
