@@ -21,6 +21,8 @@
       })();
     </script>
     <!-- ════ 여기부터 목업 내용 구획의 스타일이다. 고쳐도 된다 ════
+         · Tailwind 클래스(bg-surface · text-[17px] 등)는 이 파일에서 동작하지 않는다. 빌드 때 쓰인 클래스만
+           들어 있기 때문이다. 아래 목업 스타일의 CSS 와 토큰 변수만 쓴다.
          · 색 · 모서리 · 간격은 토큰 변수로 쓴다: var(--bg-surface) · var(--text-secondary) ·
            var(--border-light) · var(--radius-md) · var(--sp-md) 같은 이름이다. 낮 · 밤에 맞게 바뀐다.
          · 선택자는 .content 아래로 묶는다. table · h1 처럼 태그만 쓰면 사이드바 모양까지 바뀐다. -->
