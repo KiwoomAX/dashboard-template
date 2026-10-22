@@ -20,6 +20,7 @@
         if (rail === 'collapsed') root.setAttribute('data-rail', 'collapsed');
       })();
     </script>
+    <!-- 셸 CSS 가 들어갈 곳. npm run mockup 이 이 줄을 셸 CSS 로 바꾼다 -->
     <!-- ════ 여기부터 목업 내용 구획의 스타일이다. 고쳐도 된다 ════
          · Tailwind 클래스(bg-surface · text-[17px] 등)는 이 파일에서 동작하지 않는다. 빌드 때 쓰인 클래스만
            들어 있기 때문이다. 아래 목업 스타일의 CSS 와 토큰 변수만 쓴다.
@@ -33,6 +34,7 @@
       .content th { text-align: left; font-size: 13px; padding: 8px 12px; background: var(--th-bg); color: var(--th-ink); }
       .content td { font-size: 14px; padding: 10px 12px; border-bottom: 1px solid var(--border-light); }
     </style>
+    <!-- ════ 목업 스타일 끝 ════ -->
   </head>
   <body>
     <!-- ════ 여기부터 목업 내용이다. 고쳐도 된다 ════
