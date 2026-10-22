@@ -19,7 +19,7 @@ export type FeatureMenu = {
   cat?: string;
 };
 
-const FEATURE_MENU_FILE = /\/features\/([^/]+)\/menu\.[cm]?[jt]sx?$/;
+const FEATURE_MENU_FILE = /\/features\/([^/]+)\/menu\.ts$/;
 
 /** import.meta.glob('./features/*\/menu.ts', { eager: true }) 의 결과를 폴더 이름별로 모은다 */
 export function collectFeatureMenus(modules: Record<string, { default: FeatureMenu }>): Record<string, FeatureMenu> {
@@ -44,8 +44,11 @@ export function buildMenu(features: Record<string, FeatureMenu>, manual: MenuEnt
   const byCat = new Map<string, MenuItem[]>();
   for (const [folder, feature] of Object.entries(features).sort(byFolder)) {
     const item: MenuItem = { name: feature.name, path: feature.path ?? `/${folder}`, page: feature.page };
-    if (feature.cat === undefined) loose.push(item);
-    else byCat.set(feature.cat, [...(byCat.get(feature.cat) ?? []), item]);
+    if (feature.cat === undefined) {
+      // 첫 화면 기능은 폴더 이름과 상관없이 낱개 기능 중 맨 앞에 둔다
+      if (item.path === '/') loose.unshift(item);
+      else loose.push(item);
+    } else byCat.set(feature.cat, [...(byCat.get(feature.cat) ?? []), item]);
   }
 
   const out: MenuEntry[] = [];

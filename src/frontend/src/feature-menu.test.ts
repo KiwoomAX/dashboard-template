@@ -15,8 +15,12 @@ describe('collectFeatureMenus — import.meta.glob 결과에서 폴더 이름별
     expect(collectFeatureMenus(modules)['email-summary'].name).toBe('메일 요약');
   });
 
-  test('menu.ts 가 아닌 경로는 건너뛴다', () => {
-    const modules = { './features/x/other.ts': { default: feature('x') } };
+  test('menu.ts 가 아닌 경로는 건너뛴다 — glob 이 모으는 menu.ts 와 범위가 같다', () => {
+    const modules = {
+      './features/x/other.ts': { default: feature('x') },
+      './features/y/menu.tsx': { default: feature('y') },
+      './features/z/menu.js': { default: feature('z') },
+    };
 
     expect(collectFeatureMenus(modules)).toEqual({});
   });
@@ -33,10 +37,10 @@ describe('buildMenu — 기능 폴더의 menu.ts 로 메뉴 목록을 만든다'
       'fund-list': feature('펀드 목록', { path: '/' }),
     });
 
-    // 폴더 이름순이라 email-summary 가 fund-list 보다 앞이다
+    // 폴더 이름순이면 email-summary 가 앞이지만, 첫 화면(path: '/') 기능이 맨 앞에 온다
     expect(menu).toEqual([
-      { name: '메일 요약', path: '/email-summary', page: P },
       { name: '펀드 목록', path: '/', page: P },
+      { name: '메일 요약', path: '/email-summary', page: P },
     ]);
   });
 
@@ -70,6 +74,16 @@ describe('buildMenu — 기능 폴더의 menu.ts 로 메뉴 목록을 만든다'
         ],
       },
     ]);
+  });
+
+  test("첫 화면(path: '/') 기능은 낱개 기능 중 맨 앞에 온다 — 폴더 이름과 상관없다", () => {
+    const menu = buildMenu({
+      'alerts-log': feature('알림 이력'),
+      overview: feature('개요', { path: '/' }),
+      budget: feature('예산'),
+    });
+
+    expect(menu.map((entry) => ('cat' in entry ? entry.cat : entry.name))).toEqual(['개요', '알림 이력', '예산']);
   });
 
   test('카테고리는 처음 나온 순서로 놓는다 — 폴더 이름순으로 센다', () => {
