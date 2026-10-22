@@ -81,6 +81,23 @@ describe('buildMenu — 기능 폴더의 menu.ts 로 메뉴 목록을 만든다'
     expect(menu.map((entry) => ('cat' in entry ? entry.cat : entry.name))).toEqual(['첫째', '둘째']);
   });
 
+  test('손으로 적은 항목은 적은 순서를 그대로 지킨다 — 카테고리 뒤에 적은 낱개 항목도 뒤에 남는다', () => {
+    const manual: MenuEntry[] = [
+      { name: '예산', locked: true },
+      { cat: '계획 · 실적', items: [{ name: '월간 실적', path: '/monthly', page: P }] },
+      { name: '리스크', locked: true },
+    ];
+    const menu = buildMenu({ home: feature('경영 현황'), audit: feature('감사', { cat: '지배구조' }) }, manual);
+
+    expect(menu).toEqual([
+      { name: '예산', locked: true },
+      { name: '경영 현황', path: '/home', page: P },
+      { cat: '계획 · 실적', items: [{ name: '월간 실적', path: '/monthly', page: P }] },
+      { name: '리스크', locked: true },
+      { cat: '지배구조', items: [{ name: '감사', path: '/audit', page: P }] },
+    ]);
+  });
+
   test('손으로 적은 항목은 기능보다 앞에 오고, 같은 이름의 카테고리는 기능과 합쳐진다', () => {
     const manual: MenuEntry[] = [
       { name: '예산', locked: true },

@@ -19,8 +19,6 @@ export type FeatureMenu = {
   cat?: string;
 };
 
-type Slot = { cat?: string; item: MenuItem };
-
 const FEATURE_MENU_FILE = /\/features\/([^/]+)\/menu\.[cm]?[jt]sx?$/;
 
 /** import.meta.glob('./features/*\/menu.ts', { eager: true }) 의 결과를 폴더 이름별로 모은다 */
@@ -35,30 +33,38 @@ export function collectFeatureMenus(modules: Record<string, { default: FeatureMe
 
 /** 기능 폴더별 메뉴 정의로 메뉴 목록을 만든다.
 
-    손으로 적은 항목(manual)이 먼저 오고, 기능이 그 뒤에 온다. 낱개 기능은 카테고리 앞에 모으고
-    같은 이름의 카테고리는 하나로 합친다. 셸이 낱개 기능을 카테고리 사이에 끼우면 경고하기 때문이다. */
+    손으로 적은 항목(manual)은 적은 순서를 그대로 지킨다. 기능은 폴더 이름순으로 끼워 넣는다.
+    낱개 기능은 손으로 적은 낱개 항목 바로 뒤, 첫 카테고리 앞에 모은다. 같은 이름의 카테고리는
+    하나로 합치고, 새 카테고리는 맨 뒤에 놓는다. 셸이 낱개 기능을 카테고리 사이에 끼우면
+    경고하기 때문이다. 손으로 적은 순서가 셸 규칙을 어기면 고치지 않고 셸의 경고에 맡긴다. */
 export function buildMenu(features: Record<string, FeatureMenu>, manual: MenuEntry[] = []): MenuEntry[] {
-  const slots: Slot[] = [];
-  for (const entry of manual) {
-    if (isCategory(entry)) entry.items.forEach((item) => slots.push({ cat: entry.cat, item }));
-    else slots.push({ item: entry });
-  }
-
   // 폴더 이름순. 같은 목록이 늘 같은 순서로 나오게 한다
   const byFolder = ([a]: [string, FeatureMenu], [b]: [string, FeatureMenu]) => (a < b ? -1 : a > b ? 1 : 0);
+  const loose: MenuItem[] = [];
+  const byCat = new Map<string, MenuItem[]>();
   for (const [folder, feature] of Object.entries(features).sort(byFolder)) {
-    slots.push({
-      cat: feature.cat,
-      item: { name: feature.name, path: feature.path ?? `/${folder}`, page: feature.page },
-    });
+    const item: MenuItem = { name: feature.name, path: feature.path ?? `/${folder}`, page: feature.page };
+    if (feature.cat === undefined) loose.push(item);
+    else byCat.set(feature.cat, [...(byCat.get(feature.cat) ?? []), item]);
   }
 
-  const loose: MenuItem[] = [];
-  const categories = new Map<string, MenuItem[]>();
-  for (const { cat, item } of slots) {
-    if (cat === undefined) loose.push(item);
-    else categories.set(cat, [...(categories.get(cat) ?? []), item]);
+  const out: MenuEntry[] = [];
+  let looseInserted = false;
+  const insertLoose = () => {
+    if (!looseInserted) out.push(...loose);
+    looseInserted = true;
+  };
+  for (const entry of manual) {
+    if (isCategory(entry)) {
+      insertLoose();
+      const extra = byCat.get(entry.cat) ?? [];
+      byCat.delete(entry.cat);
+      out.push(extra.length ? { cat: entry.cat, items: [...entry.items, ...extra] } : entry);
+    } else {
+      out.push(entry);
+    }
   }
-  const grouped: MenuCategory[] = [...categories].map(([cat, items]) => ({ cat, items }));
-  return [...loose, ...grouped];
+  insertLoose();
+  for (const [cat, items] of byCat) out.push({ cat, items } satisfies MenuCategory);
+  return out;
 }
