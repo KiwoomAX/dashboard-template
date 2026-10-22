@@ -33,22 +33,21 @@ describe('buildMenu — 기능 폴더의 menu.ts 로 메뉴 목록을 만든다'
       'fund-list': feature('펀드 목록', { path: '/' }),
     });
 
-    // order 가 없으면 폴더 이름순이라 email-summary 가 fund-list 보다 앞이다
+    // 폴더 이름순이라 email-summary 가 fund-list 보다 앞이다
     expect(menu).toEqual([
       { name: '메일 요약', path: '/email-summary', page: P },
       { name: '펀드 목록', path: '/', page: P },
     ]);
   });
 
-  test('order 가 작은 순이고, 같거나 없으면 폴더 이름순이다 — order 가 없는 기능은 뒤로 간다', () => {
+  test('같은 조건의 기능은 폴더 이름순으로 놓는다', () => {
     const menu = buildMenu({
       b: feature('B'),
+      c: feature('C'),
       a: feature('A'),
-      z: feature('Z', { order: 1 }),
-      y: feature('Y', { order: 2 }),
     });
 
-    expect(menu.map((entry) => ('name' in entry ? entry.name : entry.cat))).toEqual(['Z', 'Y', 'A', 'B']);
+    expect(menu.map((entry) => ('name' in entry ? entry.name : entry.cat))).toEqual(['A', 'B', 'C']);
   });
 
   test('같은 cat 은 한 카테고리로 합치고, 낱개 기능은 카테고리 앞에 모은다', () => {
@@ -73,10 +72,10 @@ describe('buildMenu — 기능 폴더의 menu.ts 로 메뉴 목록을 만든다'
     ]);
   });
 
-  test('카테고리는 처음 나온 순서로 놓는다', () => {
+  test('카테고리는 처음 나온 순서로 놓는다 — 폴더 이름순으로 센다', () => {
     const menu = buildMenu({
-      a: feature('가', { cat: '둘째', order: 2 }),
-      b: feature('나', { cat: '첫째', order: 1 }),
+      b: feature('나', { cat: '둘째' }),
+      a: feature('가', { cat: '첫째' }),
     });
 
     expect(menu.map((entry) => ('cat' in entry ? entry.cat : entry.name))).toEqual(['첫째', '둘째']);

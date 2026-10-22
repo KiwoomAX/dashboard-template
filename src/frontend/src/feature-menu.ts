@@ -17,13 +17,10 @@ export type FeatureMenu = {
   path?: string;
   /** 묶을 카테고리 이름. 같은 이름끼리 한 카테고리로 합친다. 안 적으면 낱개 기능이다 */
   cat?: string;
-  /** 순서. 작은 것이 먼저이고, 같거나 안 적으면 폴더 이름순이다. 안 적은 기능은 적은 기능 뒤에 온다 */
-  order?: number;
 };
 
 type Slot = { cat?: string; item: MenuItem };
 
-const NO_ORDER = Number.MAX_SAFE_INTEGER;
 const FEATURE_MENU_FILE = /\/features\/([^/]+)\/menu\.[cm]?[jt]sx?$/;
 
 /** import.meta.glob('./features/*\/menu.ts', { eager: true }) 의 결과를 폴더 이름별로 모은다 */
@@ -47,9 +44,9 @@ export function buildMenu(features: Record<string, FeatureMenu>, manual: MenuEnt
     else slots.push({ item: entry });
   }
 
-  const byOrder = ([nameA, a]: [string, FeatureMenu], [nameB, b]: [string, FeatureMenu]) =>
-    (a.order ?? NO_ORDER) - (b.order ?? NO_ORDER) || (nameA < nameB ? -1 : nameA > nameB ? 1 : 0);
-  for (const [folder, feature] of Object.entries(features).sort(byOrder)) {
+  // 폴더 이름순. 같은 목록이 늘 같은 순서로 나오게 한다
+  const byFolder = ([a]: [string, FeatureMenu], [b]: [string, FeatureMenu]) => (a < b ? -1 : a > b ? 1 : 0);
+  for (const [folder, feature] of Object.entries(features).sort(byFolder)) {
     slots.push({
       cat: feature.cat,
       item: { name: feature.name, path: feature.path ?? `/${folder}`, page: feature.page },
