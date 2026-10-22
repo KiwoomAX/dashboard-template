@@ -1,6 +1,6 @@
 /* 기능 폴더의 menu.ts 로 메뉴 목록을 만든다.
 
-   기능은 src/features/<레포 이름>/ 폴더 하나이고, 그 안의 menu.ts 가 메뉴 한 줄을 내보낸다.
+   기능은 src/features/<기능 이름>/ 폴더 하나이고, 그 안의 menu.ts 가 메뉴 한 줄을 내보낸다.
    routes.tsx 가 이 폴더들을 모아 buildMenu 로 메뉴 목록을 만든다. 그래서 기능을 붙일 때
    routes.tsx 를 고치지 않는다. 셸 파일이 아니므로 대시보드에서 고쳐도 된다. */
 import type { ComponentType } from 'react';

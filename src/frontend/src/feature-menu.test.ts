@@ -5,7 +5,7 @@ const P = () => null;
 const feature = (name: string, extra: Partial<FeatureMenu> = {}): FeatureMenu => ({ name, page: P, ...extra });
 
 describe('collectFeatureMenus — import.meta.glob 결과에서 폴더 이름별로 모은다', () => {
-  test('경로에서 폴더 이름을 뽑는다 — 하이픈이 든 레포 이름도 그대로다', () => {
+  test('경로에서 폴더 이름을 뽑는다 — 하이픈이 든 기능 이름도 그대로다', () => {
     const modules = {
       './features/email-summary/menu.ts': { default: feature('메일 요약') },
       './features/fund_list/menu.ts': { default: feature('펀드 목록') },

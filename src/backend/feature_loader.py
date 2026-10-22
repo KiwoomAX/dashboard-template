@@ -1,7 +1,8 @@
 """기능 라우터 자동 등록.
 
-기능 하나는 features/<레포 이름>/ 폴더 하나이고, 그 안의 router.py 가 FastAPI APIRouter 를
-`router` 라는 이름으로 내보낸다. 이 모듈이 그 router 를 /api/<레포 이름> 아래에 붙인다.
+기능 하나는 features/<기능 이름>/ 폴더 하나이고, 그 안의 router.py 가 FastAPI APIRouter 를
+`router` 라는 이름으로 내보낸다. 이 모듈이 그 router 를 /api/<기능 이름> 아래에 붙인다.
+기능 이름은 영문 소문자와 숫자와 하이픈으로 짓는다. 기능 레포에서 이전한 기능은 그 레포 이름을 그대로 쓴다.
 기능을 붙일 때 main.py 를 고칠 필요가 없다.
 """
 
@@ -17,7 +18,7 @@ log = logging.getLogger("uvicorn.error")
 def load_features(app: FastAPI, features_dir: Path, package: str) -> list[str]:
     """features_dir 아래 기능의 router 를 app 에 붙이고, 불러오지 못한 기능의 이름을 돌려준다.
 
-    레포 이름에 하이픈이 있으면 import 문을 쓸 수 없어 importlib 로 불러온다.
+    폴더 이름에 하이픈이 있으면 import 문을 쓸 수 없어 importlib 로 불러온다.
     기능마다 따로 시도해, 하나가 고장 나도 나머지는 뜬다. router.py 가 없는 폴더는 건너뛴다.
     """
     failed: list[str] = []
