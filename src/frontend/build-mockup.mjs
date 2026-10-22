@@ -5,12 +5,17 @@
    못한다. 결과 파일은 kw-design 스킬이 복사해 배포한다. */
 import { readFileSync, writeFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const d = 'dist-mockup';
 let html = readFileSync(join(d, 'index.html'), 'utf8');
 const css = readFileSync(join(d, 'app.css'), 'utf8');
 const js = readFileSync(join(d, 'app.js'), 'utf8');
 const ico = readFileSync(join(d, 'favicon.png')).toString('base64');
+// 셸 토큰 파일의 확인값. kw-design 은 이 HTML 과 별도로 tokens.css 복사본을 배포하므로, 둘이 같은 토큰에서
+// 만들어졌는지 검사가 이 값으로 대조한다. 줄바꿈 차이는 빼고 계산한다
+const tokens = readFileSync('src/shell/tokens.css', 'utf8').replace(/\r\n/g, '\n');
+const tokensSha = createHash('sha256').update(tokens, 'utf8').digest('hex');
 
 html = html.replace(/\s*<link[^>]+rel="stylesheet"[^>]*>/g, '');
 html = html.replace(/\s*<script[^>]*src="[^"]*app\.js"[^>]*><\/script>/g, '');
@@ -20,6 +25,7 @@ html = html.replace(/href="[^"]*favicon\.png"/g, () => `href="data:image/png;bas
 const slot = '<!-- 셸 CSS 가 들어갈 곳. npm run mockup 이 이 줄을 셸 CSS 로 바꾼다 -->';
 if (!html.includes(slot)) throw new Error('셸 CSS 자리 표시가 없다');
 html = html.replace(slot, () => `<!-- ════ 셸 CSS(생성물). 고치지 않는다 ════ -->\n    <style>\n${css}\n    </style>`);
+html = html.replace('<title>', () => `<meta name="kw-tokens-sha256" content="${tokensSha}" />\n    <title>`);
 html = html.replace('</body>', () => `    <!-- 셸 코드(생성물). 고치지 않는다 -->\n    <script>\n${js}\n    </script>\n  </body>`);
 
 if (!html.includes('createRoot') || !html.includes('mockup-config')) throw new Error('합치기 실패');
