@@ -109,10 +109,21 @@ describe('본부 전환', () => {
 });
 
 describe('하단 프로필', () => {
-  test('계정이 없는 동안은 「사용자」로 그리고 아이디 칸을 두지 않는다', () => {
+  // 조회 중에 「사용자」를 그리면 게이트웨이 뒤에서 「사용자」가 잠깐 보였다가 이름으로 바뀐다.
+  test('조회 중에는 이름과 아바타 글자를 비워 둔다', () => {
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>(() => {})));
     const { container } = renderShell();
+    expect(container.querySelector('.rail-me .av')).toBeEmptyDOMElement();
+    expect(container.querySelector('.rail-me .nm')).toBeEmptyDOMElement();
+    expect(screen.queryByRole('button', { name: '로그아웃' })).toBeNull();
+  });
+
+  // 게이트웨이 밖(개발 서버 등)에서는 조회가 실패한다.
+  test('계정을 모르면 「사용자」로 그리고 아이디 칸을 두지 않는다', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => { throw new TypeError('끊김'); }));
+    const { container } = renderShell();
+    await waitFor(() => expect(container.querySelector('.rail-me .nm')).toHaveTextContent('사용자'));
     expect(container.querySelector('.rail-me .av')).toHaveTextContent('사');
-    expect(container.querySelector('.rail-me .nm')).toHaveTextContent('사용자');
     expect(container.querySelector('.rail-me .id')).toBeNull();
   });
 
@@ -132,8 +143,8 @@ describe('하단 프로필', () => {
     vi.stubGlobal('fetch', fetchMock);
     const { container } = renderShell();
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/auth/api/me', expect.anything()));
-    expect(container.querySelector('.rail-me .nm')).toHaveTextContent('사용자');
+    expect(fetchMock).toHaveBeenCalledWith('/auth/api/me', expect.anything());
+    await waitFor(() => expect(container.querySelector('.rail-me .nm')).toHaveTextContent('사용자'));
     expect(screen.queryByRole('button', { name: '로그아웃' })).toBeNull();
   });
 

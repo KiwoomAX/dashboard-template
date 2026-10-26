@@ -23,9 +23,9 @@ export async function fetchCurrentUser(): Promise<SessionUser | null> {
   }
 }
 
-/** 화면이 열릴 때 한 번 묻는다. 답이 오기 전과 모를 때는 null. */
-export function useCurrentUser(): SessionUser | null {
-  const [user, setUser] = useState<SessionUser | null>(null);
+/** 화면이 열릴 때 한 번 묻는다. 답이 오기 전은 undefined, 모르면 null. */
+export function useCurrentUser(): SessionUser | null | undefined {
+  const [user, setUser] = useState<SessionUser | null | undefined>(undefined);
   useEffect(() => {
     let alive = true;
     fetchCurrentUser().then((u) => {
