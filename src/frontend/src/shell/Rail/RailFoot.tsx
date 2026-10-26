@@ -1,16 +1,18 @@
 /* 사이드바 하단 — 프로필 · 설정 판 · 로그아웃.
    생김새는 챗봇 레일 하단(Kiwoom-Rag RailUserBlock)과 같다. 남색 동그라미에 성 한 글자,
    이름과 아이디를 한 줄에, 오른쪽 끝에 로그아웃. 챗봇에는 없는 설정 판(낮/밤)은
-   아바타와 이름을 눌러 연다. */
+   아바타와 이름을 눌러 연다. 로그인한 사람을 모르면 「사용자」로 그리고 로그아웃을 두지 않는다. */
 import { LogOut, Moon, Sun } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTheme } from '../prefs';
 import { usePopover } from '../usePopover';
-import { currentUser } from '../user';
+import { GUEST, logout, useCurrentUser } from '../user';
 
 export default function RailFoot({ collapsed }: { collapsed: boolean }) {
   const [theme, setTheme] = useTheme();
   const pop = usePopover<HTMLButtonElement, HTMLDivElement>();
+  const user = useCurrentUser();
+  const shown = user ?? GUEST;
 
   /* 접힌 사이드바에서는 설정 판을 쓰지 않는다. 열려 있던 판도 닫는다 */
   useEffect(() => {
@@ -61,18 +63,19 @@ export default function RailFoot({ collapsed }: { collapsed: boolean }) {
             if (!collapsed) pop.setOpen((open) => !open);
           }}
         >
-          <span className="av" title={currentUser.name}>
-            {currentUser.name.slice(0, 1)}
+          <span className="av" title={shown.name}>
+            {shown.name.slice(0, 1)}
           </span>
           <span className="bd">
-            <b className="nm">{currentUser.name}</b>
-            {currentUser.emailId && <span className="id">{currentUser.emailId}</span>}
+            <b className="nm">{shown.name}</b>
+            {shown.emailId && <span className="id">{shown.emailId}</span>}
           </span>
         </button>
-        {/* 로그인을 연결하기 전이라 눌러도 나가지 않는다 */}
-        <button className="rail-out" type="button" aria-label="로그아웃" title="로그아웃">
-          <LogOut size={17} className="ic" />
-        </button>
+        {user && (
+          <button className="rail-out" type="button" aria-label="로그아웃" title="로그아웃" onClick={() => logout()}>
+            <LogOut size={17} className="ic" />
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,10 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { RAIL_KEY, THEME_KEY } from '../prefs';
 import { Page, renderShell } from '../testing';
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 beforeEach(() => {
   localStorage.clear();
@@ -110,6 +114,27 @@ describe('하단 프로필', () => {
     expect(container.querySelector('.rail-me .av')).toHaveTextContent('사');
     expect(container.querySelector('.rail-me .nm')).toHaveTextContent('사용자');
     expect(container.querySelector('.rail-me .id')).toBeNull();
+  });
+
+  // 게이트웨이 뒤에서는 /auth/api/me 가 로그인한 사람을 돌려준다.
+  test('로그인한 사람의 이름과 아이디를 그리고 로그아웃 단추를 둔다', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => Response.json({ userId: 7, name: '홍길동', emailId: 'hong.gd' })));
+    const { container } = renderShell();
+
+    expect(await screen.findByText('홍길동')).toBeInTheDocument();
+    expect(container.querySelector('.rail-me .av')).toHaveTextContent('홍');
+    expect(container.querySelector('.rail-me .id')).toHaveTextContent('hong.gd');
+    expect(screen.getByRole('button', { name: '로그아웃' })).toBeInTheDocument();
+  });
+
+  test('로그인하지 않았으면 「사용자」로 그리고 로그아웃 단추를 두지 않는다', async () => {
+    const fetchMock = vi.fn(async () => Response.json({ authenticated: false }));
+    vi.stubGlobal('fetch', fetchMock);
+    const { container } = renderShell();
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/auth/api/me', expect.anything()));
+    expect(container.querySelector('.rail-me .nm')).toHaveTextContent('사용자');
+    expect(screen.queryByRole('button', { name: '로그아웃' })).toBeNull();
   });
 
   test('프로필을 눌러 설정 판을 열고 밤을 고른다', () => {
