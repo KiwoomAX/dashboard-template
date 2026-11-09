@@ -48,7 +48,7 @@ export default function StatusBar({ title, asof, cycle, refresh, actions }: Stat
           {inMenu && (
             <span className="crumb">
               {config.org}
-              <ChevronDown size={13} className="ic cv" />
+              <ChevronDown size={12} className="ic cv" />
             </span>
           )}
           <h1>{title}</h1>
@@ -58,13 +58,13 @@ export default function StatusBar({ title, asof, cycle, refresh, actions }: Stat
             {/* 갱신 주기는 매일 읽을 값이 아니라 한 번 알면 되는 값이라 시계 툴팁에 둔다.
                 주기가 없으면 빈 툴팁을 달지 않는다 */}
             <span className="cyc" {...(cycle && { title: cycle, 'aria-label': cycle, tabIndex: 0 })}>
-              <Clock size={12} className="ic bold" />
+              <Clock size={11} className="ic bold" />
             </span>
             <span>{asof}</span>
             {/* 새로고침은 기준 시각 줄에 붙는다. 다시 받는 대상이 그 줄이 말하는 시각이다 */}
             {refresh && (
               <button className="asof-refresh" type="button" aria-label={REFRESH_LABEL} title={REFRESH_TIP} onClick={refresh}>
-                <RefreshCw size={13} className="ic" />
+                <RefreshCw size={12} className="ic" />
               </button>
             )}
           </div>
@@ -73,14 +73,14 @@ export default function StatusBar({ title, asof, cycle, refresh, actions }: Stat
       <span className="spacer" />
       {actions?.map(({ name, icon: Icon, onClick }) => (
         <button className="btn-ghost" type="button" key={name} onClick={onClick}>
-          {Icon && <Icon size={15} className="ic" />}
+          {Icon && <Icon size={14} className="ic" />}
           {name}
         </button>
       ))}
       {/* 기준 시각 줄이 없으면 새로고침은 오른쪽 아이콘 줄로 간다 */}
       {refresh && !asof && (
         <button className="icon-btn" type="button" aria-label={REFRESH_LABEL} title={REFRESH_TIP} onClick={refresh}>
-          <RefreshCw size={16} className="ic" />
+          <RefreshCw size={14} className="ic" />
         </button>
       )}
       {/* 알림 종은 모든 페이지에 있다. 건수 배지는 「안 본 것이 남았다」는 뜻이라 의미색(--bad)을 쓴다 */}
@@ -94,7 +94,7 @@ export default function StatusBar({ title, asof, cycle, refresh, actions }: Stat
         title="알림"
         onClick={drawer.toggle}
       >
-        <BellIcon size={16} className="ic" />
+        <BellIcon size={14} className="ic" />
         {drawer.count > 0 && <span className="cnt">{drawer.count}</span>}
       </button>
     </header>

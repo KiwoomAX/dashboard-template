@@ -23,7 +23,7 @@ function NavItem({ item }: { item: MenuItem }) {
     return (
       <button className="nav-item is-locked" type="button" aria-disabled="true" title={`${item.name}. ${LOCKED_NOTE}`}>
         <span className="nm">{item.name}</span>
-        <Lock size={13} className="ic lock" />
+        <Lock size={12} className="ic lock" />
       </button>
     );
   }
@@ -47,7 +47,7 @@ export default function RailNav() {
       <div className={`nav-group${closed ? ' is-closed' : ''}`}>
         <button className="nav-label is-toggle" type="button" aria-expanded={!closed} onClick={() => setClosed((c) => !c)}>
           <span className="txt">{unitOf(config.org)} 기능</span>
-          <ChevronDown size={12} className="ic cv" />
+          <ChevronDown size={11} className="ic cv" />
         </button>
         {menu.map((entry, i) =>
           isCategory(entry) ? (

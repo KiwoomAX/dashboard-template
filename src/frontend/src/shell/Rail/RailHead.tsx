@@ -27,7 +27,7 @@ export default function RailHead({ collapsed, onToggle }: Props) {
     const rail = who?.closest('.rail');
     /* 누른 줄 바로 아래에 연다. 머리 칸은 overflow:hidden 이라 그 안에 두면 잘리므로
        사이드바를 기준으로 두고 위치만 계산한다 */
-    if (who && rail) setTop(who.getBoundingClientRect().bottom - rail.getBoundingClientRect().top + 8);
+    if (who && rail) setTop(who.getBoundingClientRect().bottom - rail.getBoundingClientRect().top + 7);
     pop.setOpen((open) => !open);
   };
 
@@ -61,7 +61,7 @@ export default function RailHead({ collapsed, onToggle }: Props) {
             {config.org}
             {switchable && (
               <span className="org-cv">
-                <ChevronDown size={13} className="ic" />
+                <ChevronDown size={12} className="ic" />
               </span>
             )}
           </div>
@@ -74,7 +74,7 @@ export default function RailHead({ collapsed, onToggle }: Props) {
           aria-expanded={!collapsed}
           onClick={onToggle}
         >
-          <PanelLeft size={17} className="ic" />
+          <PanelLeft size={15} className="ic" />
         </button>
       </div>
 
@@ -82,13 +82,13 @@ export default function RailHead({ collapsed, onToggle }: Props) {
         <div className={`org-pop${pop.open ? ' is-open' : ''}`} ref={pop.panelRef} style={{ top }}>
           <div className="lb">접근 가능한 대시보드</div>
           <a href="/" className="is-cur" aria-current="page">
-            <LayoutDashboard size={16} className="ic" />
+            <LayoutDashboard size={14} className="ic" />
             {config.org}
-            <ClipboardCheck size={14} className="ic chk" />
+            <ClipboardCheck size={13} className="ic chk" />
           </a>
           {config.others.map((other) => (
             <a key={other.url} href={other.url}>
-              <LayoutDashboard size={16} className="ic" />
+              <LayoutDashboard size={14} className="ic" />
               {other.name}
             </a>
           ))}

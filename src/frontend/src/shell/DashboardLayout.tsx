@@ -8,13 +8,15 @@ import StatusBar, { type StatusBarProps } from './StatusBar/StatusBar';
 export type DashboardLayoutProps = StatusBarProps & {
   /** 내용 구획에 들어갈 것 */
   children?: ReactNode;
+  /** 내용 구획의 정렬은 페이지가 자유롭게 정한다. 넘기지 않으면 제안값인 중앙에 둔다 */
+  contentAlign?: 'left' | 'right';
 };
 
-export default function DashboardLayout({ children, ...statusBar }: DashboardLayoutProps) {
+export default function DashboardLayout({ children, contentAlign, ...statusBar }: DashboardLayoutProps) {
   return (
     <div className="main">
       <StatusBar {...statusBar} />
-      <main className="content" aria-label="내용">
+      <main className="content" aria-label="내용" data-align={contentAlign}>
         {children}
       </main>
     </div>
