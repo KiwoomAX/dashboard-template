@@ -7,6 +7,7 @@ import { StrictMode, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 import '../src/index.css';
+import '../src/shell/ui/ui.css';
 import DashboardLayout from '../src/shell/DashboardLayout';
 import { useAlertCount } from '../src/shell/Drawer/Drawer';
 import { ShellProvider, type DashboardConfig } from '../src/shell/ShellContext';
