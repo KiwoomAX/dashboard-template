@@ -31,7 +31,7 @@ function htmlPage(path: string, name: string): ComponentType {
         title={tpl?.dataset.title ?? name}
         asof={tpl?.dataset.asof}
         cycle={tpl?.dataset.cycle}
-        contentAlign={tpl?.dataset.align === 'left' ? 'left' : undefined}
+        contentAlign={tpl?.dataset.align === 'left' || tpl?.dataset.align === 'right' ? tpl.dataset.align : undefined}
       >
         <div dangerouslySetInnerHTML={{ __html: html }} />
       </DashboardLayout>

@@ -8,8 +8,8 @@ import StatusBar, { type StatusBarProps } from './StatusBar/StatusBar';
 export type DashboardLayoutProps = StatusBarProps & {
   /** 내용 구획에 들어갈 것 */
   children?: ReactNode;
-  /** 내용 구획은 기본이 중앙 정렬이다. 왼쪽에 붙이려면 'left' 를 넘긴다 */
-  contentAlign?: 'left';
+  /** 내용 구획의 정렬은 페이지가 자유롭게 정한다. 넘기지 않으면 제안값인 중앙에 둔다 */
+  contentAlign?: 'left' | 'right';
 };
 
 export default function DashboardLayout({ children, contentAlign, ...statusBar }: DashboardLayoutProps) {
