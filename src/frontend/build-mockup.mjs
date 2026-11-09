@@ -3,7 +3,7 @@
    `npm run mockup` 이 vite 빌드 뒤에 실행한다. npm 을 쓰는 PC 에는 Node 가 있으므로 다른 프로그램이
    필요 없다. 스크립트는 body 끝에 둔다. head 에 두면 #root 와 <template> 이 아직 없어 앱이 시작하지
    못한다. 결과 파일은 kw-design 스킬이 복사해 배포한다. */
-import { readFileSync, writeFileSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, writeFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { createHash } from 'node:crypto';
 
@@ -17,8 +17,8 @@ const ico = readFileSync(join(d, 'favicon.png')).toString('base64');
 const tokens = readFileSync('src/shell/tokens.css', 'utf8').replace(/\r\n/g, '\n');
 const tokensSha = createHash('sha256').update(tokens, 'utf8').digest('hex');
 // 공용 컴포넌트의 확인값. kw-design 의 복사본과 같은 원본인지 검사가 대조한다
-const uiFiles = ['Button.tsx', 'Card.tsx', 'Input.tsx', 'Modal.tsx', 'cx.ts', 'index.ts', 'ui.css'];
-const uiText = uiFiles.map((f) => readFileSync(join('src/shell/ui', f), 'utf8').replace(/\r\n/g, '\n')).join('');
+const uiFiles = readdirSync('src/shell/ui').filter((f) => !f.includes('.test.')).sort();
+const uiText = uiFiles.map((f) => `--- ${f}\n` + readFileSync(join('src/shell/ui', f), 'utf8').replace(/\r\n/g, '\n')).join('');
 const uiSha = createHash('sha256').update(uiText, 'utf8').digest('hex');
 
 html = html.replace(/\s*<link[^>]+rel="stylesheet"[^>]*>/g, '');

@@ -31,9 +31,12 @@ describe('공용 컴포넌트', () => {
     expect(screen.getByLabelText('금액').getAttribute('aria-invalid')).toBe('true');
   });
 
-  it('Card 는 제목이 없으면 머리를 그리지 않는다', () => {
+  it('Card 는 제목이 없으면 제목 요소를 그리지 않는다', () => {
     const { container, rerender } = render(<Card>내용</Card>);
     expect(container.querySelector('.kw-card__head')).toBeNull();
+    rerender(<Card actions={<Button>전체 보기</Button>}>내용</Card>);
+    expect(container.querySelector('h3')).toBeNull();
+    expect(screen.getByRole('button', { name: '전체 보기' })).toBeTruthy();
     rerender(<Card title="운용 현황">내용</Card>);
     expect(screen.getByRole('heading', { name: '운용 현황' })).toBeTruthy();
   });
@@ -55,5 +58,17 @@ describe('공용 컴포넌트', () => {
 
     rerender(<Modal open={false} onClose={onClose} title="확인">본문</Modal>);
     expect(dialog.open).toBe(false);
+  });
+
+  it('Modal 은 브라우저가 직접 닫아도 열린 동안에만 onClose 를 호출한다', () => {
+    const onClose = vi.fn();
+    const { container, rerender } = render(<Modal open onClose={onClose} title="확인">본문</Modal>);
+    const dialog = container.querySelector('dialog') as HTMLDialogElement;
+    fireEvent(dialog, new Event('close'));
+    expect(onClose).toHaveBeenCalledTimes(1);
+
+    rerender(<Modal open={false} onClose={onClose} title="확인">본문</Modal>);
+    fireEvent(dialog, new Event('close'));
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 });

@@ -30,7 +30,6 @@
            var(--border-light) · var(--radius-md) · var(--sp-md) 같은 이름이다. 낮 · 밤에 맞게 바뀐다.
          · 선택자는 .content 아래로 묶는다. table · h1 처럼 태그만 쓰면 사이드바 모양까지 바뀐다. -->
     <style id="mockup-style">
-      .content .card { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: var(--sp-md); }
       .content .lede { margin: 0 0 var(--sp-md); font-size: 13px; color: var(--text-secondary); }
       .content table { width: 100%; border-collapse: separate; border-spacing: 0; }
       .content th { text-align: left; font-size: 13px; padding: 8px 12px; background: var(--th-bg); color: var(--th-ink); }
@@ -64,7 +63,7 @@
     </script>
 
     <template data-path="/">
-      <p class="lede">여기에 화면 내용을 적습니다. 목업 스타일의 .card · table 은 미리 정해 둔 모양입니다.</p>
+      <p class="lede">여기에 화면 내용을 적습니다. 카드 · 단추 · 입력칸은 공용 컴포넌트 클래스(kw-card · kw-btn · kw-input)를 쓰고, table 은 목업 스타일에 정해 둔 모양입니다.</p>
     </template>
 
     <template data-path="/feature-2">
