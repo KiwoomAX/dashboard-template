@@ -8,13 +8,15 @@ import StatusBar, { type StatusBarProps } from './StatusBar/StatusBar';
 export type DashboardLayoutProps = StatusBarProps & {
   /** 내용 구획에 들어갈 것 */
   children?: ReactNode;
+  /** 내용 구획은 기본이 중앙 정렬이다. 왼쪽에 붙이려면 'left' 를 넘긴다 */
+  contentAlign?: 'left';
 };
 
-export default function DashboardLayout({ children, ...statusBar }: DashboardLayoutProps) {
+export default function DashboardLayout({ children, contentAlign, ...statusBar }: DashboardLayoutProps) {
   return (
     <div className="main">
       <StatusBar {...statusBar} />
-      <main className="content" aria-label="내용">
+      <main className="content" aria-label="내용" data-align={contentAlign}>
         {children}
       </main>
     </div>

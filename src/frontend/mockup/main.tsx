@@ -27,7 +27,12 @@ function htmlPage(path: string, name: string): ComponentType {
   const html = tpl ? tpl.innerHTML : `<p>이 주소의 &lt;template data-path="${path}"&gt; 가 없습니다.</p>`;
   return function Page() {
     return (
-      <DashboardLayout title={tpl?.dataset.title ?? name} asof={tpl?.dataset.asof} cycle={tpl?.dataset.cycle}>
+      <DashboardLayout
+        title={tpl?.dataset.title ?? name}
+        asof={tpl?.dataset.asof}
+        cycle={tpl?.dataset.cycle}
+        contentAlign={tpl?.dataset.align === 'left' ? 'left' : undefined}
+      >
         <div dangerouslySetInnerHTML={{ __html: html }} />
       </DashboardLayout>
     );

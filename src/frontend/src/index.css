@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
-/* 셸의 토큰과 모양. 이 두 줄은 지우지 않는다. */
+/* 셸의 서체와 토큰과 모양. 이 세 줄은 지우지 않는다. */
+@import "./shell/fonts/suit.css";
 @import "./shell/tokens.css";
 @import "./shell/shell.css";

@@ -8,11 +8,11 @@
 /* ── 전체 배율 ────────────────────────────────────────────────
    화면 전체를 한 번에 줄인다. 사이드바와 상태바와 내용이 같은 비율로 작아지므로
    서로의 크기 관계는 달라지지 않는다. 글자 크기 표와 셸의 px 값은 배율 전 값이다.
-   지금은 1 이라 CSS 에 적은 px 그대로 보인다.
+   지금은 0.9 라 CSS 에 적은 px 의 90% 크기로 보인다.
    100vh 는 배율 밖의 값이라 배율을 1 아래로 내리면 사이드바가 화면 높이의 그 비율까지만 그려진다.
    그래서 vh 를 쓰는 세 곳은 배율로 나눈다. */
 :root {
-  --shell-zoom: 1;
+  --shell-zoom: 0.9;
 }
 html {
   zoom: var(--shell-zoom);
@@ -28,16 +28,17 @@ html {
   body {
     /* 사내 도구 — 데스크톱 전용이다. 좁아지면 가로 스크롤을 준다 */
     min-width: 1120px;
-    /* 사내 PC 에 기본으로 깔린 서체를 쓴다. 웹폰트를 내보내지 않으므로 파일이 없는 서체를
-       앞에 두면 PC 마다 다른 서체로 그려진다 */
-    font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', -apple-system,
+    /* 서체 파일은 shell/fonts 에 있다. SUIT 에 없는 드문 한글은 뒤의 사내 PC 기본 서체로 그린다 */
+    font-family: 'SUIT', 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', -apple-system,
       BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: var(--bg-app);
     color: var(--text-primary);
-    /* 금액과 비율의 자릿수를 맞춘다. 화면마다 적지 않아도 표와 지표가 저절로 맞는다 */
+    /* 금액과 비율의 자릿수를 맞춘다. 화면마다 적지 않아도 표와 지표가 저절로 맞는다.
+       SUIT 는 자릿수를 맞춘 숫자에도 1 뒤의 간격을 넓히는 글자 사이 조정이 있어 조정을 끈다 */
     font-variant-numeric: tabular-nums;
+    font-kerning: none;
     font-size: 14px;
     line-height: var(--lead-relaxed);
     transition: background var(--t-fast), color var(--t-fast);
@@ -737,16 +738,19 @@ html {
 }
 
 /* ── 내용 구획 ────────────────────────────────────────────── */
-/* 폭을 묶고 왼쪽에 붙인다. 넓은 화면에서 끝까지 늘리면 표 한 줄이 화면을 가로질러
-   눈이 줄을 놓친다. 가운데에 세우면 화면 폭과 사이드바 접힘과 알림 서랍에 따라 여백이
-   생겼다 사라져 내용의 왼쪽 끝이 움직이므로, 왼쪽 끝은 늘 사이드바 옆에 둔다.
+/* 폭을 묶고 중앙에 둔다. 넓은 화면에서 끝까지 늘리면 표 한 줄이 화면을 가로질러
+   눈이 줄을 놓친다. 왼쪽에 붙이려면 페이지가 DashboardLayout 에 contentAlign="left" 를 넘긴다.
    내용 구획만 1.12배로 확대한다(목업과 같다). 스킬의 글자 크기 표는 확대 전 값이다.
    zoom 은 배치를 끝낸 뒤에 곱하므로 max-width 를 배율로 나눠 전체 배율 전 1560px 이 되게 한다. */
 .content {
   --fs-zoom: 1.12;
   zoom: var(--fs-zoom);
   max-width: calc(1560px / var(--fs-zoom));
+  margin-inline: auto;
   padding: var(--sp-lg) var(--sp-xl) 64px;
+}
+.content[data-align="left"] {
+  margin-inline: 0;
 }
 
 /* ── 알림 서랍 틀 ─────────────────────────────────────────── */
