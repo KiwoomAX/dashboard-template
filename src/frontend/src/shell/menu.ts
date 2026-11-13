@@ -7,7 +7,7 @@ import type { ComponentType } from 'react';
 import { matchPath } from 'react-router-dom';
 
 /** 여는 기능 — 이름 · 주소 · 페이지를 모두 적는다 */
-export type OpenItem = { name: string; path: string; page: ComponentType; locked?: never };
+export type OpenItem = { name: string; path: string; page: ComponentType; locked?: never; marker?: string };
 
 /** 권한이 없어 잠긴 기능 — 목록에서 지우지 않고 자물쇠로 보여 준다 */
 export type LockedItem = { name: string; locked: true; path?: never; page?: never };
@@ -30,6 +30,24 @@ export function isOpenItem(item: MenuItem): item is OpenItem {
 /** 지금 주소가 이 기능의 주소인지. 사이드바의 켜진 항목과 상태바의 경로 표시가 함께 쓴다 */
 export function isActive(item: OpenItem, pathname: string): boolean {
   return matchPath({ path: item.path, end: true }, pathname) !== null;
+}
+
+/** 카테고리에서 처음 열리는 기능. 카테고리 이름을 누르면 여기로 간다. 열리는 기능이 없으면 undefined */
+export function firstOpen(category: MenuCategory): OpenItem | undefined {
+  return category.items.find(isOpenItem);
+}
+
+/** 지금 주소가 속한 기능과 그 카테고리. 상태바의 「본부 › 카테고리 › 기능」 경로가 쓴다 */
+export function findTrail(menu: MenuEntry[], pathname: string): { item: OpenItem; category?: MenuCategory } | undefined {
+  for (const entry of menu) {
+    if (isCategory(entry)) {
+      const item = entry.items.find((it): it is OpenItem => isOpenItem(it) && isActive(it, pathname));
+      if (item) return { item, category: entry };
+    } else if (isOpenItem(entry) && isActive(entry, pathname)) {
+      return { item: entry };
+    }
+  }
+  return undefined;
 }
 
 /** 카테고리를 벗겨 기능만 한 줄로 편다 */

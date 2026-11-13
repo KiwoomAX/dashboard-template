@@ -3,7 +3,7 @@
 import { ChevronDown, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { isActive, isCategory, isOpenItem, type MenuItem } from '../menu';
+import { firstOpen, isActive, isCategory, isOpenItem, type MenuCategory, type MenuItem } from '../menu';
 import { useShell } from '../ShellContext';
 
 /* 대시보드 주인이 본부일 수도 팀일 수도 있다. 조직 이름 끝에서 단위를 읽는다 */
@@ -32,7 +32,20 @@ function NavItem({ item }: { item: MenuItem }) {
   return (
     <Link to={item.path} className={`nav-item${on ? ' is-on' : ''}`} title={item.name} aria-current={on ? 'page' : undefined}>
       <span className="nm">{item.name}</span>
+      {item.marker && <span className="mk">{item.marker}</span>}
     </Link>
+  );
+}
+
+/* 카테고리 이름 — 눌리면 그 안에서 처음 열리는 기능으로 간다. 열리는 기능이 없으면 라벨로만 둔다 */
+function CategoryLabel({ category }: { category: MenuCategory }) {
+  const first = firstOpen(category);
+  return first ? (
+    <Link to={first.path} className="nav-cat is-link" title={`${category.cat} — ${first.name} 열기`}>
+      {category.cat}
+    </Link>
+  ) : (
+    <div className="nav-cat">{category.cat}</div>
   );
 }
 
@@ -52,7 +65,7 @@ export default function RailNav() {
         {menu.map((entry, i) =>
           isCategory(entry) ? (
             <div className="nav-sub-wrap" key={`cat-${i}`}>
-              <div className="nav-cat">{entry.cat}</div>
+              <CategoryLabel category={entry} />
               <div className="nav-sub">
                 {entry.items.map((item, j) => (
                   <NavItem item={item} key={`${i}-${j}`} />

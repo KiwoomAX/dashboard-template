@@ -2,6 +2,7 @@ import { fireEvent, screen } from '@testing-library/react';
 import { Download } from 'lucide-react';
 import DashboardLayout, { type DashboardLayoutProps } from '../DashboardLayout';
 import { renderShell } from '../testing';
+import { AlertBell } from './StatusBar';
 
 /* 상태바 값을 받은 페이지 하나를 '/status' 에 올린다 */
 function renderStatus(props: Omit<DashboardLayoutProps, 'title'> & { title?: string } = {}) {
@@ -83,5 +84,55 @@ describe('화면 고유 단추', () => {
     expect(container.querySelector('.btn-ghost .ic')).not.toBeNull();
     fireEvent.click(btn);
     expect(onClick).toHaveBeenCalledOnce();
+  });
+});
+
+describe('카테고리 안 기능의 경로', () => {
+  test('조직 이름 › 카테고리 › 제목이고, 카테고리를 누르면 첫 기능 주소로 간다', () => {
+    const { container } = renderShell({ path: '/tasks' });
+    const crumbs = container.querySelectorAll('.topbar .crumb');
+    expect(crumbs).toHaveLength(2);
+    expect(crumbs[0]).toHaveTextContent('경영전략본부');
+    expect(crumbs[1]).toHaveTextContent('계획 · 실적');
+    expect(crumbs[1]).toHaveAttribute('href', '/kpi');
+  });
+
+  test('낱개 기능은 조직 이름만 붙는다', () => {
+    const { container } = renderShell({ path: '/status' });
+    expect(container.querySelectorAll('.topbar .crumb')).toHaveLength(1);
+  });
+
+  test('페이지가 상태바를 직접 꾸려도 알림 종이 있으면 서랍이 열린다', () => {
+    const Custom = () => (
+      <DashboardLayout
+        title="직접 꾸린 상태바"
+        statusBar={
+          <header className="topbar">
+            <h1>직접 꾸린 상태바</h1>
+            <AlertBell />
+          </header>
+        }
+      />
+    );
+    renderShell({ path: '/custom', menu: [{ name: '직접', path: '/custom', page: Custom }] });
+    const bell = screen.getByRole('button', { name: '알림' });
+    fireEvent.click(bell);
+    expect(bell).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  test('페이지가 상태바를 직접 꾸려도 탭 제목은 title 로 바뀐다', () => {
+    const Custom = () => (
+      <DashboardLayout
+        title="직접 꾸린 화면"
+        statusBar={
+          <header className="topbar">
+            <h1>직접 꾸린 화면</h1>
+            <AlertBell />
+          </header>
+        }
+      />
+    );
+    renderShell({ path: '/custom', menu: [{ name: '직접', path: '/custom', page: Custom }] });
+    expect(document.title).toBe('직접 꾸린 화면 · 경영전략본부');
   });
 });
