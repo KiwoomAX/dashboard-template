@@ -155,3 +155,42 @@ describe('buildMenu — 사이드바 오른쪽 표시', () => {
     ]);
   });
 });
+
+describe('buildMenu — 하위 기능을 가진 기능', () => {
+  test('같은 카테고리 안에서 parent 가 같은 기능은 한 기능 아래 하위 기능으로 묶인다', () => {
+    const menu = buildMenu({
+      daily: feature('일간 현황', { cat: '현황', parent: '펀드 현황' }),
+      monthly: feature('월간 현황', { cat: '현황', parent: '펀드 현황' }),
+      solo: feature('단독', { cat: '현황' }),
+    });
+    expect(menu).toEqual([
+      {
+        cat: '현황',
+        items: [
+          { name: '펀드 현황', items: [{ name: '일간 현황', path: '/daily', page: P }, { name: '월간 현황', path: '/monthly', page: P }] },
+          { name: '단독', path: '/solo', page: P },
+        ],
+      },
+    ]);
+  });
+
+  test('카테고리가 없는 기능도 parent 로 묶이고, 첫 화면 기능은 parent 를 적어도 낱개로 맨 앞에 온다', () => {
+    const menu = buildMenu({
+      a: feature('A', { parent: '묶음' }),
+      b: feature('B', { parent: '묶음' }),
+      home: feature('홈', { path: '/', parent: '묶음' }),
+    });
+    expect(menu).toEqual([
+      { name: '홈', path: '/', page: P },
+      { name: '묶음', items: [{ name: 'A', path: '/a', page: P }, { name: 'B', path: '/b', page: P }] },
+    ]);
+  });
+
+  test('다른 카테고리의 같은 parent 이름은 서로 섞이지 않는다', () => {
+    const menu = buildMenu({
+      a: feature('A', { cat: '하나', parent: '묶음' }),
+      b: feature('B', { cat: '둘', parent: '묶음' }),
+    });
+    expect(menu).toHaveLength(2);
+  });
+});

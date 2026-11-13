@@ -197,3 +197,42 @@ describe('기능 이름 오른쪽 표시와 카테고리 이동', () => {
     expect(screen.getByText('잠긴 묶음')).toHaveClass('nav-cat');
   });
 });
+
+describe('하위 기능을 가진 기능', () => {
+  const menu = [
+    {
+      cat: '현황',
+      items: [
+        { name: '펀드 현황', items: [{ name: '일간 현황', path: '/daily', page: Page }, { name: '월간 현황', path: '/monthly', page: Page }] },
+        { name: '전부 잠김', items: [{ name: '비공개 A', locked: true as const }] },
+      ],
+    },
+    { name: '리스크', items: [{ name: '한도', path: '/limit', page: Page }] },
+  ];
+
+  test('머리 줄은 처음 열리는 하위 기능으로 가고, 하위 기능은 그 아래에 그린다', () => {
+    const { container } = renderShell({ menu });
+    expect(screen.getByRole('link', { name: '펀드 현황' })).toHaveAttribute('href', '/daily');
+    expect(container.querySelectorAll('.nav-parent .nav-children .nav-item')).toHaveLength(2 + 1 + 1);
+    expect(screen.getByRole('link', { name: '월간 현황' })).toBeInTheDocument();
+  });
+
+  test('하위 기능이 모두 잠긴 기능의 머리 줄은 링크가 아니다', () => {
+    renderShell({ menu });
+    expect(screen.queryByRole('link', { name: '전부 잠김' })).toBeNull();
+    expect(screen.getByText('전부 잠김').closest('.nav-item')).toHaveClass('is-locked');
+  });
+
+  test('지금 보는 화면이 하위 기능이면 머리 줄은 is-inside, 그 하위 기능만 켠다', () => {
+    const { container } = renderShell({ path: '/monthly', menu });
+    // 상태바 경로에도 같은 이름의 링크가 있으므로 사이드바 안에서만 찾는다
+    expect(container.querySelector('.rail-nav a.is-parent')).toHaveClass('is-inside');
+    expect(container.querySelector('.rail-nav a.is-on')).toHaveTextContent('월간 현황');
+    expect(container.querySelectorAll('.nav-item.is-on')).toHaveLength(1);
+  });
+
+  test('카테고리 없이 낱개로 둔 기능도 하위 기능을 가질 수 있다', () => {
+    renderShell({ menu });
+    expect(screen.getByRole('link', { name: '리스크' })).toHaveAttribute('href', '/limit');
+  });
+});

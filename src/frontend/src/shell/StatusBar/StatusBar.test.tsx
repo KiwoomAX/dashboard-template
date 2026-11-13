@@ -136,3 +136,24 @@ describe('카테고리 안 기능의 경로', () => {
     expect(document.title).toBe('직접 꾸린 화면 · 경영전략본부');
   });
 });
+
+describe('하위 기능의 경로', () => {
+  test('조직 이름 › 카테고리 › 기능 › 제목이고, 기능을 누르면 처음 열리는 하위 기능으로 간다', () => {
+    const Daily = () => <DashboardLayout title="일간 현황" />;
+    const Monthly = () => <DashboardLayout title="월간 현황" />;
+    const { container } = renderShell({
+      path: '/monthly',
+      menu: [
+        {
+          cat: '현황',
+          items: [{ name: '펀드 현황', items: [{ name: '일간 현황', path: '/daily', page: Daily }, { name: '월간 현황', path: '/monthly', page: Monthly }] }],
+        },
+      ],
+    });
+    const crumbs = container.querySelectorAll('.topbar .crumb');
+    expect(Array.from(crumbs).map((c) => c.textContent)).toEqual(['경영전략본부', '현황', '펀드 현황']);
+    expect(crumbs[1]).toHaveAttribute('href', '/daily');
+    expect(crumbs[2]).toHaveAttribute('href', '/daily');
+    expect(screen.getByRole('heading', { name: '월간 현황' })).toBeInTheDocument();
+  });
+});
