@@ -194,3 +194,33 @@ describe('buildMenu — 하위 기능을 가진 기능', () => {
     expect(menu).toHaveLength(2);
   });
 });
+
+describe('buildMenu — 직접 적은 목록과 합칠 때 같은 이름의 하위 기능 묶음', () => {
+  test('직접 적은 카테고리의 묶음과 기능 폴더의 parent 가 같은 이름이면 하나로 합친다', () => {
+    const manual: MenuEntry[] = [
+      { cat: '현황', items: [{ name: '펀드 현황', items: [{ name: '직접 적은 화면', path: '/manual', page: P }] }] },
+    ];
+    const menu = buildMenu({ daily: feature('일간 현황', { cat: '현황', parent: '펀드 현황' }) }, manual);
+    expect(menu).toEqual([
+      {
+        cat: '현황',
+        items: [{ name: '펀드 현황', items: [{ name: '직접 적은 화면', path: '/manual', page: P }, { name: '일간 현황', path: '/daily', page: P }] }],
+      },
+    ]);
+  });
+
+  test('직접 적은 목록의 객체는 고치지 않는다', () => {
+    const parent = { name: '펀드 현황', items: [{ name: '직접 적은 화면', path: '/manual', page: P }] };
+    const manual: MenuEntry[] = [{ cat: '현황', items: [parent] }];
+    buildMenu({ daily: feature('일간 현황', { cat: '현황', parent: '펀드 현황' }) }, manual);
+    expect(parent.items).toHaveLength(1);
+  });
+
+  test('카테고리 없는 묶음도 직접 적은 낱개 묶음과 같은 이름이면 합친다', () => {
+    const manual: MenuEntry[] = [{ name: '리스크', items: [{ name: '직접 적은 화면', path: '/manual', page: P }] }];
+    const menu = buildMenu({ limit: feature('한도', { parent: '리스크' }) }, manual);
+    expect(menu).toHaveLength(1);
+    expect(menu[0]).toMatchObject({ name: '리스크' });
+    expect((menu[0] as { items: unknown[] }).items).toHaveLength(2);
+  });
+});

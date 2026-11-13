@@ -35,6 +35,20 @@ export function collectFeatureMenus(modules: Record<string, { default: FeatureMe
   return collected;
 }
 
+/* 이름이 같은 하위 기능 묶음(ParentItem)을 하나로 합친다. 직접 적은 목록(manual)에 「펀드 현황」 묶음이 있고
+   기능 폴더의 menu.ts 에도 parent: '펀드 현황' 이 있으면 사이드바에 같은 이름의 묶음이 둘 생기기 때문이다.
+   직접 적은 목록의 객체는 고치지 않고 합친 새 객체를 만든다 */
+function mergeParents<T extends MenuEntry>(list: T[]): T[] {
+  const result: T[] = [];
+  for (const entry of list) {
+    const at = isParent(entry) ? result.findIndex((e) => isParent(e) && e.name === entry.name) : -1;
+    const same = result[at];
+    if (same && isParent(same) && isParent(entry)) result[at] = { ...same, items: [...same.items, ...entry.items] };
+    else result.push(entry);
+  }
+  return result;
+}
+
 /** 기능 폴더별 메뉴 정의로 메뉴 목록을 만든다.
 
     손으로 적은 항목(manual)은 적은 순서를 그대로 지킨다. 기능은 폴더 이름순으로 끼워 넣는다.
@@ -80,12 +94,12 @@ export function buildMenu(features: Record<string, FeatureMenu>, manual: MenuEnt
       insertLoose();
       const extra = byCat.get(entry.cat) ?? [];
       byCat.delete(entry.cat);
-      out.push(extra.length ? { cat: entry.cat, items: [...entry.items, ...extra] } : entry);
+      out.push(extra.length ? { cat: entry.cat, items: mergeParents([...entry.items, ...extra]) } : entry);
     } else {
       out.push(entry);
     }
   }
   insertLoose();
   for (const [cat, items] of byCat) out.push({ cat, items } satisfies MenuCategory);
-  return out;
+  return mergeParents(out);
 }
