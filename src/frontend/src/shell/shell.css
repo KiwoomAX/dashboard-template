@@ -384,6 +384,29 @@
 .nav-item .lock {
   color: var(--text-tertiary);
 }
+/* 하위 기능을 가진 기능 — 머리 줄은 기능 줄과 같은 칸에서 시작하고, 하위 기능은 한 칸 더 들여쓴다.
+   머리 줄은 눌리면 처음 열리는 하위 기능으로 간다. 지금 보는 화면이 그 안에 있으면 글자만 진하게 한다 */
+.nav-item.is-parent.is-inside {
+  color: var(--text-primary);
+}
+.nav-group > .nav-parent > .nav-item {
+  padding-left: 16px;
+}
+.nav-group > .nav-parent > .nav-children .nav-item {
+  padding-left: 25px;
+}
+.nav-sub .nav-parent > .nav-item {
+  padding-left: 25px;
+}
+.nav-sub .nav-parent > .nav-children .nav-item {
+  padding-left: 34px;
+}
+.nav-sub-wrap + .nav-parent {
+  margin-top: 9px;
+}
+.nav-group.is-closed .nav-parent {
+  display: none;
+}
 /* 기능 이름 오른쪽 표시 — 숫자든 글자든 값이 있을 때만 붙는다. 키움 핑크 글자만 쓰고 면은 두지 않는다 */
 .nav-item .mk {
   flex: none;

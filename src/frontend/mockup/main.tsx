@@ -12,10 +12,11 @@ import DashboardLayout from '../src/shell/DashboardLayout';
 import { useAlertCount } from '../src/shell/Drawer/Drawer';
 import { ShellProvider, type DashboardConfig } from '../src/shell/ShellContext';
 import ShellRoutes from '../src/shell/ShellRoutes';
-import type { MenuEntry, MenuItem } from '../src/shell/menu';
+import type { MenuEntry, MenuItem, MenuNode } from '../src/shell/menu';
 
 type ItemJson = { name: string; path?: string; locked?: boolean; marker?: string };
-type EntryJson = ItemJson | { cat: string; items: ItemJson[] };
+type ParentJson = { name: string; items: ItemJson[] };
+type EntryJson = ItemJson | ParentJson | { cat: string; items: (ItemJson | ParentJson)[] };
 type MockupJson = DashboardConfig & { menu: EntryJson[] };
 
 function template(selector: string): HTMLTemplateElement | null {
@@ -45,6 +46,11 @@ function toItem(item: ItemJson): MenuItem {
   return { name: item.name, path: item.path, page: htmlPage(item.path, item.name), ...(item.marker && { marker: item.marker }) };
 }
 
+/* 하위 기능을 가진 기능은 { "name", "items": [ … ] } 이고, 아니면 기능 하나다 */
+function toNode(node: ItemJson | ParentJson): MenuNode {
+  return 'items' in node ? { name: node.name, items: node.items.map(toItem) } : toItem(node);
+}
+
 function Alerts() {
   const tpl = template('template#alerts');
   useAlertCount(Number(tpl?.dataset.count ?? 0));
@@ -53,7 +59,7 @@ function Alerts() {
 
 const json = JSON.parse(document.getElementById('mockup-config')!.textContent!) as MockupJson;
 const menu: MenuEntry[] = json.menu.map((entry) =>
-  'cat' in entry ? { cat: entry.cat, items: entry.items.map(toItem) } : toItem(entry),
+  'cat' in entry ? { cat: entry.cat, items: entry.items.map(toNode) } : toNode(entry),
 );
 const config: DashboardConfig = { org: json.org, others: json.others ?? [] };
 

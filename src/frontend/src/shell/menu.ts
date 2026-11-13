@@ -14,13 +14,29 @@ export type LockedItem = { name: string; locked: true; path?: never; page?: neve
 
 export type MenuItem = OpenItem | LockedItem;
 
-/** 기능 몇 개를 묶는 소제목. 안에는 기능만 온다 — 카테고리는 한 단만 묶는다 */
-export type MenuCategory = { cat: string; items: MenuItem[] };
+/** 하위 기능을 가진 기능 — 자기 화면은 없고, 누르면 그 안에서 처음 열리는 하위 기능으로 간다.
+    하위 기능이 필요 없으면 쓰지 않는다. 하위 기능은 한 단만 둔다 */
+export type ParentItem = { name: string; items: MenuItem[]; locked?: never; path?: never; page?: never };
 
-export type MenuEntry = MenuItem | MenuCategory;
+/** 기능 하나 — 낱개 기능이거나 하위 기능을 가진 기능 */
+export type MenuNode = MenuItem | ParentItem;
+
+/** 기능 몇 개를 묶는 소제목. 안에는 기능이 온다 — 카테고리는 한 단만 묶는다 */
+export type MenuCategory = { cat: string; items: MenuNode[] };
+
+export type MenuEntry = MenuNode | MenuCategory;
 
 export function isCategory(entry: MenuEntry): entry is MenuCategory {
   return 'cat' in entry;
+}
+
+export function isParent(entry: MenuEntry): entry is ParentItem {
+  return !('cat' in entry) && 'items' in entry;
+}
+
+/* 기능 하나를 화면이 있는 기능들로 편다. 하위 기능을 가진 기능은 하위 기능만 남는다 */
+function leaves(node: MenuNode): MenuItem[] {
+  return isParent(node) ? node.items : [node];
 }
 
 export function isOpenItem(item: MenuItem): item is OpenItem {
@@ -32,27 +48,37 @@ export function isActive(item: OpenItem, pathname: string): boolean {
   return matchPath({ path: item.path, end: true }, pathname) !== null;
 }
 
-/** 카테고리에서 처음 열리는 기능. 카테고리 이름을 누르면 여기로 간다. 열리는 기능이 없으면 undefined */
-export function firstOpen(category: MenuCategory): OpenItem | undefined {
-  return category.items.find(isOpenItem);
+/** 카테고리나 하위 기능을 가진 기능 안에서 처음 열리는 기능. 그 이름을 누르면 여기로 간다. 열리는 기능이 없으면 undefined */
+export function firstOpen(target: MenuCategory | ParentItem): OpenItem | undefined {
+  const nodes: MenuNode[] = target.items;
+  return nodes.flatMap(leaves).find(isOpenItem);
 }
 
-/** 지금 주소가 속한 기능과 그 카테고리. 상태바의 「본부 › 카테고리 › 기능」 경로가 쓴다 */
-export function findTrail(menu: MenuEntry[], pathname: string): { item: OpenItem; category?: MenuCategory } | undefined {
-  for (const entry of menu) {
-    if (isCategory(entry)) {
-      const item = entry.items.find((it): it is OpenItem => isOpenItem(it) && isActive(it, pathname));
-      if (item) return { item, category: entry };
-    } else if (isOpenItem(entry) && isActive(entry, pathname)) {
-      return { item: entry };
+/** 지금 주소가 속한 기능과 그 위의 기능 · 카테고리. 상태바의 「본부 › 카테고리 › 기능 › 하위 기능」 경로가 쓴다 */
+export type Trail = { item: OpenItem; parent?: ParentItem; category?: MenuCategory };
+
+export function findTrail(menu: MenuEntry[], pathname: string): Trail | undefined {
+  const inNodes = (nodes: MenuNode[], category?: MenuCategory): Trail | undefined => {
+    for (const node of nodes) {
+      if (isParent(node)) {
+        const item = node.items.find((it): it is OpenItem => isOpenItem(it) && isActive(it, pathname));
+        if (item) return { item, parent: node, ...(category && { category }) };
+      } else if (isOpenItem(node) && isActive(node, pathname)) {
+        return { item: node, ...(category && { category }) };
+      }
     }
+    return undefined;
+  };
+  for (const entry of menu) {
+    const found = isCategory(entry) ? inNodes(entry.items, entry) : inNodes([entry]);
+    if (found) return found;
   }
   return undefined;
 }
 
-/** 카테고리를 벗겨 기능만 한 줄로 편다 */
+/** 카테고리와 하위 기능을 벗겨 화면이 있는 기능만 한 줄로 편다 */
 export function flatten(menu: MenuEntry[]): MenuItem[] {
-  return menu.flatMap((entry) => (isCategory(entry) ? entry.items : [entry]));
+  return menu.flatMap((entry) => (isCategory(entry) ? entry.items.flatMap(leaves) : leaves(entry)));
 }
 
 /* 타입이 막지 못하는 규칙 둘을 검사해 경고 문장을 돌려준다. 낱개 기능은 카테고리 앞이나 뒤에
@@ -73,6 +99,13 @@ export function checkMenu(menu: MenuEntry[]): string[] {
     if (strayName !== null) {
       warnings.push(`낱개 기능은 카테고리 사이에 끼우지 않는다 — ${strayName}`);
       strayName = null;
+    }
+  }
+
+  const nodes = menu.flatMap((entry) => (isCategory(entry) ? entry.items : [entry]));
+  for (const node of nodes) {
+    if (isParent(node) && node.items.length === 0) {
+      warnings.push(`하위 기능이 없는 기능은 낱개 기능으로 적는다 — ${node.name}`);
     }
   }
 
