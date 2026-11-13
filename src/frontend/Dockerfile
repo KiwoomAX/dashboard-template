@@ -15,7 +15,9 @@ COPY src/frontend/package.json src/frontend/package-lock.json ./
 RUN npm ci
 
 COPY src/frontend/ ./
-RUN npm run build
+# 게이트웨이의 /<접두어>/ 아래에서 여는 화면은 compose 의 build.args 로 BASE_PATH=/<접두어>/ 를 준다.
+ARG BASE_PATH=/
+RUN npm run build -- --base="$BASE_PATH"
 
 FROM nginx:alpine
 
