@@ -166,3 +166,34 @@ describe('하단 프로필', () => {
     expect(container.querySelector('.rail-pop')).not.toHaveClass('is-open');
   });
 });
+
+describe('기능 이름 오른쪽 표시와 카테고리 이동', () => {
+  const menu = [
+    {
+      cat: '계획 · 실적',
+      items: [
+        { name: '경영계획 · 예산', locked: true as const },
+        { name: '실적 · KPI 관리', path: '/kpi', page: Page, marker: '3' },
+        { name: '전략과제 관리', path: '/tasks', page: Page },
+      ],
+    },
+    { cat: '잠긴 묶음', items: [{ name: '비공개 기능', locked: true as const }] },
+  ];
+
+  test('표시를 적은 기능에만 이름 오른쪽에 표시가 붙는다', () => {
+    const { container } = renderShell({ menu });
+    expect(container.querySelectorAll('.nav-item .mk')).toHaveLength(1);
+    expect(screen.getByRole('link', { name: /실적 · KPI 관리/ })).toHaveTextContent('3');
+  });
+
+  test('카테고리 이름은 그 안에서 처음 열리는 기능으로 가는 링크다', () => {
+    renderShell({ menu });
+    expect(screen.getByRole('link', { name: '계획 · 실적' })).toHaveAttribute('href', '/kpi');
+  });
+
+  test('열리는 기능이 없는 카테고리는 링크가 아니라 라벨이다', () => {
+    renderShell({ menu });
+    expect(screen.queryByRole('link', { name: '잠긴 묶음' })).toBeNull();
+    expect(screen.getByText('잠긴 묶음')).toHaveClass('nav-cat');
+  });
+});

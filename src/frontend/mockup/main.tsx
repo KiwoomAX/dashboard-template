@@ -14,7 +14,7 @@ import { ShellProvider, type DashboardConfig } from '../src/shell/ShellContext';
 import ShellRoutes from '../src/shell/ShellRoutes';
 import type { MenuEntry, MenuItem } from '../src/shell/menu';
 
-type ItemJson = { name: string; path?: string; locked?: boolean };
+type ItemJson = { name: string; path?: string; locked?: boolean; marker?: string };
 type EntryJson = ItemJson | { cat: string; items: ItemJson[] };
 type MockupJson = DashboardConfig & { menu: EntryJson[] };
 
@@ -42,7 +42,7 @@ function htmlPage(path: string, name: string): ComponentType {
 
 function toItem(item: ItemJson): MenuItem {
   if (item.locked || !item.path) return { name: item.name, locked: true };
-  return { name: item.name, path: item.path, page: htmlPage(item.path, item.name) };
+  return { name: item.name, path: item.path, page: htmlPage(item.path, item.name), ...(item.marker && { marker: item.marker }) };
 }
 
 function Alerts() {

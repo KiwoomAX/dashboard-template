@@ -384,6 +384,22 @@
 .nav-item .lock {
   color: var(--text-tertiary);
 }
+/* 기능 이름 오른쪽 표시 — 숫자든 글자든 값이 있을 때만 붙는다. 키움 핑크 글자만 쓰고 면은 두지 않는다 */
+.nav-item .mk {
+  flex: none;
+  font-size: var(--fs-badge);
+  font-weight: var(--w-bold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--rise-kiwoom);
+}
+/* 눌리는 카테고리 이름 — 라벨 모양을 지키고 올렸을 때만 글자색이 진해진다 */
+.nav-cat.is-link {
+  transition: color var(--t-fast);
+}
+.nav-cat.is-link:hover {
+  color: var(--text-primary);
+}
 
 /* ── 하단 — 프로필 ────────────────────────────────────────────
    위에 구분선을 두지 않는다(챗봇과 같다). 기능 목록이 flex:1 이라 바닥에 붙는다. */
@@ -610,6 +626,9 @@
 }
 .topbar .crumb .cv {
   transform: rotate(-90deg);
+}
+.topbar .crumb.is-link:hover {
+  color: var(--text-primary);
 }
 .topbar .asof {
   display: flex;

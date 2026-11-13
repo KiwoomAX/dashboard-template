@@ -145,3 +145,13 @@ describe('buildMenu — 기능 폴더의 menu.ts 로 메뉴 목록을 만든다'
     expect(checkMenu(menu)).toEqual([]);
   });
 });
+
+describe('buildMenu — 사이드바 오른쪽 표시', () => {
+  test('marker 를 적은 기능만 메뉴 줄에 marker 가 들어간다', () => {
+    const menu = buildMenu({ a: feature('A', { marker: '3' }), b: feature('B') });
+    expect(menu).toEqual([
+      { name: 'A', path: '/a', page: P, marker: '3' },
+      { name: 'B', path: '/b', page: P },
+    ]);
+  });
+});

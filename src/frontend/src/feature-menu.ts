@@ -17,6 +17,8 @@ export type FeatureMenu = {
   path?: string;
   /** 묶을 카테고리 이름. 같은 이름끼리 한 카테고리로 합친다. 안 적으면 낱개 기능이다 */
   cat?: string;
+  /** 사이드바 이름 오른쪽에 붙일 짧은 표시(숫자 · 글자). 알림 건수가 아니어도 된다. 안 적으면 없다 */
+  marker?: string;
 };
 
 const FEATURE_MENU_FILE = /\/features\/([^/]+)\/menu\.ts$/;
@@ -43,7 +45,7 @@ export function buildMenu(features: Record<string, FeatureMenu>, manual: MenuEnt
   const loose: MenuItem[] = [];
   const byCat = new Map<string, MenuItem[]>();
   for (const [folder, feature] of Object.entries(features).sort(byFolder)) {
-    const item: MenuItem = { name: feature.name, path: feature.path ?? `/${folder}`, page: feature.page };
+    const item: MenuItem = { name: feature.name, path: feature.path ?? `/${folder}`, page: feature.page, ...(feature.marker && { marker: feature.marker }) };
     if (feature.cat === undefined) {
       // 첫 화면 기능은 폴더 이름과 상관없이 낱개 기능 중 맨 앞에 둔다
       if (item.path === '/') loose.unshift(item);
