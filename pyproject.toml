@@ -24,7 +24,9 @@ package = false
 # [tool.uv.sources]
 
 [tool.pytest.ini_options]
-testpaths = ["src/backend/tests"]
+testpaths = ["src/backend/tests", "src/backend/features"]
+# 기능마다 같은 시험 파일 이름이 있어도 수집이 멈추지 않게 한다.
+addopts = "--import-mode=importlib"
 # 테스트가 src.backend.* 를 들여올 수 있게 레포 맨 위를 경로에 넣는다. package = false 라
 # 백엔드가 설치되지 않으므로, 이 줄이 없으면 pytest 가 src 를 찾지 못하고 수집에서 끝난다.
 pythonpath = ["."]
