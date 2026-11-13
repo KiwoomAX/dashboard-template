@@ -2,9 +2,9 @@
    왼쪽에 「조직 이름 › 제목」과 기준 시각을 한 줄로 두고, 오른쪽에 화면 고유 단추를 둔다.
    기능이 카테고리 안에 있으면 「조직 이름 › 카테고리 › 제목」이고, 카테고리 이름을 누르면 그 안의
    첫 기능으로 간다. 페이지가 상태바를 직접 꾸려도 되지만 상태바 틀(header.topbar), 제목(h1),
-   알림 종(AlertBell) 셋은 남겨야 한다. 그래야 모든 화면에서 알림 서랍이 같게 열린다. */
+   알림 종(AlertBell) 셋은 남겨야 한다. 그래야 모든 화면에서 알림 서랍이 같게 열린다.
+   탭 제목은 DashboardLayout 이 title 로 정한다. */
 import { Bell as BellIcon, ChevronDown, Clock, RefreshCw, type LucideIcon } from 'lucide-react';
-import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDrawer } from '../Drawer/Drawer';
 import { findTrail, firstOpen } from '../menu';
@@ -59,10 +59,6 @@ export default function StatusBar({ title, asof, cycle, refresh, actions }: Stat
   /* 경로 표시는 지금 주소가 메뉴에 있을 때만 붙인다. 없는 길을 지어내지 않는다 */
   const trail = findTrail(menu, pathname);
   const categoryFirst = trail?.category && firstOpen(trail.category);
-
-  useEffect(() => {
-    document.title = `${title} · ${config.org}`;
-  }, [title, config.org]);
 
   return (
     <header className="topbar">

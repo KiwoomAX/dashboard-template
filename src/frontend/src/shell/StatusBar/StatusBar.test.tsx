@@ -119,4 +119,20 @@ describe('카테고리 안 기능의 경로', () => {
     fireEvent.click(bell);
     expect(bell).toHaveAttribute('aria-expanded', 'true');
   });
+
+  test('페이지가 상태바를 직접 꾸려도 탭 제목은 title 로 바뀐다', () => {
+    const Custom = () => (
+      <DashboardLayout
+        title="직접 꾸린 화면"
+        statusBar={
+          <header className="topbar">
+            <h1>직접 꾸린 화면</h1>
+            <AlertBell />
+          </header>
+        }
+      />
+    );
+    renderShell({ path: '/custom', menu: [{ name: '직접', path: '/custom', page: Custom }] });
+    expect(document.title).toBe('직접 꾸린 화면 · 경영전략본부');
+  });
 });
