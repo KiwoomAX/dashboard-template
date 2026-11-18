@@ -5,6 +5,20 @@
    유틸리티(레이어 안)보다 늘 이기고, 내용 구획의 클래스가 셸 모양을 바꾸지 못한다.
    ══════════════════════════════════════════════════════════════════════ */
 
+/* ── 페이지 스크롤바 ──────────────────────────────────────────
+   트랙과 thumb 테두리를 페이지 배경(--bg-app)에 맞춰 경계가 보이지 않게 한다.
+   .rail-nav 는 아래에서 사이드바 배경에 맞춰 따로 덮어쓴다. */
+html {
+  scrollbar-color: var(--border-medium) var(--bg-app);
+  scrollbar-width: thin;
+}
+html::-webkit-scrollbar { width: 10px; height: 10px; }
+html::-webkit-scrollbar-track { background: var(--bg-app); }
+html::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border: 3px solid var(--bg-app);
+  border-radius: var(--radius-full);
+}
 /* ── 기본 ─────────────────────────────────────────────────────
    base 레이어에 둔다. 내용 구획은 유틸리티로 이 값들을 덮을 수 있다. */
 @layer base {
