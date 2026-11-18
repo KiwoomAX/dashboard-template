@@ -16,6 +16,15 @@
 }
 html {
   zoom: var(--shell-zoom);
+  scrollbar-color: var(--border-medium) var(--bg-app);
+  scrollbar-width: thin;
+}
+html::-webkit-scrollbar { width: 10px; height: 10px; }
+html::-webkit-scrollbar-track { background: var(--bg-app); }
+html::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border: 3px solid var(--bg-app);
+  border-radius: var(--radius-full);
 }
 
 /* ── 기본 ─────────────────────────────────────────────────────
