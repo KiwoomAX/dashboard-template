@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { checkMenu, type MenuEntry } from './menu';
+import { checkMenu, findTrail, firstOpen, flatten, type MenuCategory, type MenuEntry, type ParentItem } from './menu';
 import { ShellProvider } from './ShellContext';
 
 const P = () => null;
@@ -77,5 +77,41 @@ describe('타입이 막지 못하는 규칙은 경고한다', () => {
     expect(warn).toHaveBeenCalledTimes(1);
     expect(warn).toHaveBeenCalledWith('[shell] 낱개 기능은 카테고리 사이에 끼우지 않는다 — 경영 현황');
     warn.mockRestore();
+  });
+});
+
+describe('하위 기능을 가진 기능', () => {
+  const P2 = () => null;
+  const a = { name: '일간 현황', path: '/daily', page: P2 };
+  const b = { name: '월간 현황', path: '/monthly', page: P2 };
+  const locked = { name: '비공개', locked: true as const };
+  const menu: MenuEntry[] = [
+    { cat: '현황', items: [{ name: '펀드 현황', items: [locked, a, b] }, { name: '단독', path: '/solo', page: P2 }] },
+    { name: '리스크', items: [{ name: '한도', path: '/limit', page: P2 }] },
+  ];
+
+  test('flatten 은 하위 기능만 남기고 화면이 있는 기능을 한 줄로 편다', () => {
+    expect(flatten(menu).map((it) => it.name)).toEqual(['비공개', '일간 현황', '월간 현황', '단독', '한도']);
+  });
+
+  test('firstOpen 은 잠긴 기능을 지나 처음 열리는 기능을 고른다', () => {
+    const parent = (menu[0] as { items: ParentItem[] }).items[0];
+    expect(firstOpen(parent)?.path).toBe('/daily');
+    expect(firstOpen(menu[0] as MenuCategory)?.path).toBe('/daily');
+  });
+
+  test('findTrail 은 카테고리와 기능과 하위 기능을 함께 돌려준다', () => {
+    const t = findTrail(menu, '/monthly');
+    expect(t?.item.name).toBe('월간 현황');
+    expect(t?.parent?.name).toBe('펀드 현황');
+    expect(t?.category?.cat).toBe('현황');
+    expect(findTrail(menu, '/solo')?.parent).toBeUndefined();
+    expect(findTrail(menu, '/limit')?.category).toBeUndefined();
+    expect(findTrail(menu, '/limit')?.parent?.name).toBe('리스크');
+  });
+
+  test('하위 기능이 하나도 없는 기능은 낱개 기능으로 적으라고 경고한다', () => {
+    expect(checkMenu([{ name: '빈 기능', items: [] }])).toEqual(['하위 기능이 없는 기능은 낱개 기능으로 적는다 — 빈 기능']);
+    expect(checkMenu(menu)).toEqual([]);
   });
 });

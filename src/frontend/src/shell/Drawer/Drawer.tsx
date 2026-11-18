@@ -73,7 +73,7 @@ export function useAlertCount(count: number): void {
   useEffect(() => setCount(count), [count, setCount]);
 }
 
-/** 셸의 세 번째 칸. 닫히면 폭이 0 이고, 열리면 340px 로 내용 구획을 덮지 않고 민다 */
+/** 셸의 세 번째 칸. 닫히면 폭이 0 이고, 열리면 306px 로 내용 구획을 덮지 않고 민다 */
 export function DrawerPanel({ children }: { children: ReactNode }) {
   const { open } = useDrawer();
   const sideRef = useRef<HTMLElement>(null);

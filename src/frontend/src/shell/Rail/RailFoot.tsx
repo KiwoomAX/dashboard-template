@@ -34,7 +34,7 @@ export default function RailFoot({ collapsed }: { collapsed: boolean }) {
               title="낮"
               onClick={() => setTheme('light')}
             >
-              <Sun size={15} className="ic" />
+              <Sun size={14} className="ic" />
             </button>
             <button
               type="button"
@@ -44,7 +44,7 @@ export default function RailFoot({ collapsed }: { collapsed: boolean }) {
               title="밤"
               onClick={() => setTheme('dark')}
             >
-              <Moon size={15} className="ic" />
+              <Moon size={14} className="ic" />
             </button>
           </div>
         </div>
@@ -74,7 +74,7 @@ export default function RailFoot({ collapsed }: { collapsed: boolean }) {
         </button>
         {user && (
           <button className="rail-out" type="button" aria-label="로그아웃" title="로그아웃" onClick={() => logout()}>
-            <LogOut size={17} className="ic" />
+            <LogOut size={15} className="ic" />
           </button>
         )}
       </div>

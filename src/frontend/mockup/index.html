@@ -28,11 +28,12 @@
            var(--border-light) · var(--radius-md) · var(--sp-md) 같은 이름이다. 낮 · 밤에 맞게 바뀐다.
          · 선택자는 .content 아래로 묶는다. table · h1 처럼 태그만 쓰면 사이드바 모양까지 바뀐다. -->
     <style id="mockup-style">
-      .content .card { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: var(--sp-md); }
       .content .lede { margin: 0 0 var(--sp-md); font-size: 13px; color: var(--text-secondary); }
-      .content table { width: 100%; border-collapse: collapse; }
-      .content th { text-align: left; font-size: 13px; padding: 8px 12px; background: var(--th-bg); color: var(--th-ink); }
-      .content td { font-size: 14px; padding: 10px 12px; border-bottom: 1px solid var(--border-light); }
+      .content .table-box { padding: var(--sp-sm) 20px; border: 1px solid var(--border-light); border-radius: var(--table-radius); background: var(--bg-surface); }
+      .content table { width: 100%; border-collapse: separate; border-spacing: 0; }
+      .content th { text-align: left; font-size: 12px; font-weight: var(--w-bold); padding: 8px 16px; color: var(--text-secondary); background: var(--bg-surface); border-bottom: 1px solid var(--border-medium); }
+      .content td { font-size: 14px; padding: 10px 16px; border-bottom: 1px solid var(--border-light); }
+      .content tr:last-child td { border-bottom: 0; }
     </style>
     <!-- ════ 목업 스타일 끝 ════ -->
   </head>
@@ -40,8 +41,11 @@
     <!-- ════ 여기부터 목업 내용이다. 고쳐도 된다 ════
          · mockup-config: 조직 이름과 사이드바 메뉴. 메뉴 줄은 { "name", "path" } 이고, 잠긴 기능은
            { "name", "locked": true }, 카테고리는 { "cat", "items": [ … ] } 다. 대표 기능 하나가 "/" 다.
+           이름 오른쪽에 숫자나 짧은 글자를 붙이려면 줄에 "marker": "3" 을 적는다. 카테고리 이름을 누르면 그 안의 첫 기능으로 간다.
+           하위 기능이 필요하면 기능 줄을 { "name", "items": [ … ] } 로 적는다(카테고리 안에도 둘 수 있다). 쓰지 않아도 된다.
          · <template data-path="…"> 하나가 화면 하나다. 내용 구획에 들어갈 HTML 만 적는다.
            data-title 은 상태바 제목(없으면 메뉴 이름), data-asof 는 기준 시각이다.
+           내용 정렬은 자유롭게 정한다. 제안값은 중앙이고, data-align="left" 나 "right" 로 바꾼다.
          · <template id="alerts" data-count="…"> 는 상태바 종을 누르면 열리는 알림 서랍 내용이다.
          · 사이드바와 상태바는 그리지 않는다. 아래 스크립트가 실제 셸 코드로 그린다. -->
     <script type="application/json" id="mockup-config">
@@ -55,7 +59,7 @@
     </script>
 
     <template data-path="/">
-      <p class="lede">여기에 화면 내용을 적습니다. 목업 스타일의 .card · table 은 미리 정해 둔 모양입니다.</p>
+      <p class="lede">여기에 화면 내용을 적습니다. 카드 · 단추 · 입력칸은 공용 컴포넌트 클래스(kw-card · kw-btn · kw-input)를 쓰고, 표는 div.table-box 안에 table 을 넣으면 목업 스타일에 정해 둔 모양이 됩니다.</p>
     </template>
 
     <template data-path="/feature-2">

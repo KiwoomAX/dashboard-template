@@ -3,7 +3,7 @@
 import { ChevronDown, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { isActive, isCategory, isOpenItem, type MenuItem } from '../menu';
+import { firstOpen, isActive, isCategory, isOpenItem, isParent, type MenuCategory, type MenuItem, type MenuNode } from '../menu';
 import { useShell } from '../ShellContext';
 
 /* 대시보드 주인이 본부일 수도 팀일 수도 있다. 조직 이름 끝에서 단위를 읽는다 */
@@ -23,7 +23,7 @@ function NavItem({ item }: { item: MenuItem }) {
     return (
       <button className="nav-item is-locked" type="button" aria-disabled="true" title={`${item.name}. ${LOCKED_NOTE}`}>
         <span className="nm">{item.name}</span>
-        <Lock size={13} className="ic lock" />
+        <Lock size={12} className="ic lock" />
       </button>
     );
   }
@@ -32,7 +32,48 @@ function NavItem({ item }: { item: MenuItem }) {
   return (
     <Link to={item.path} className={`nav-item${on ? ' is-on' : ''}`} title={item.name} aria-current={on ? 'page' : undefined}>
       <span className="nm">{item.name}</span>
+      {item.marker && <span className="mk">{item.marker}</span>}
     </Link>
+  );
+}
+
+/* 기능 하나 — 낱개 기능이면 NavItem 하나, 하위 기능을 가진 기능이면 머리 줄과 그 아래 한 칸 들여쓴 하위 기능이다.
+   머리 줄은 눌리면 처음 열리는 하위 기능으로 가고, 하위 기능이 모두 잠겼으면 눌리지 않는 이름만 둔다 */
+function NavNode({ node }: { node: MenuNode }) {
+  const { pathname } = useLocation();
+  if (!isParent(node)) return <NavItem item={node} />;
+
+  const first = firstOpen(node);
+  const inside = node.items.some((item) => isOpenItem(item) && isActive(item, pathname));
+  return (
+    <div className="nav-parent">
+      {first ? (
+        <Link to={first.path} className={`nav-item is-parent${inside ? ' is-inside' : ''}`} title={`${node.name} — ${first.name} 열기`}>
+          <span className="nm">{node.name}</span>
+        </Link>
+      ) : (
+        <div className="nav-item is-parent is-locked">
+          <span className="nm">{node.name}</span>
+        </div>
+      )}
+      <div className="nav-children">
+        {node.items.map((item, k) => (
+          <NavItem item={item} key={k} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* 카테고리 이름 — 눌리면 그 안에서 처음 열리는 기능으로 간다. 열리는 기능이 없으면 라벨로만 둔다 */
+function CategoryLabel({ category }: { category: MenuCategory }) {
+  const first = firstOpen(category);
+  return first ? (
+    <Link to={first.path} className="nav-cat is-link" title={`${category.cat} — ${first.name} 열기`}>
+      {category.cat}
+    </Link>
+  ) : (
+    <div className="nav-cat">{category.cat}</div>
   );
 }
 
@@ -47,20 +88,20 @@ export default function RailNav() {
       <div className={`nav-group${closed ? ' is-closed' : ''}`}>
         <button className="nav-label is-toggle" type="button" aria-expanded={!closed} onClick={() => setClosed((c) => !c)}>
           <span className="txt">{unitOf(config.org)} 기능</span>
-          <ChevronDown size={12} className="ic cv" />
+          <ChevronDown size={11} className="ic cv" />
         </button>
         {menu.map((entry, i) =>
           isCategory(entry) ? (
             <div className="nav-sub-wrap" key={`cat-${i}`}>
-              <div className="nav-cat">{entry.cat}</div>
+              <CategoryLabel category={entry} />
               <div className="nav-sub">
                 {entry.items.map((item, j) => (
-                  <NavItem item={item} key={`${i}-${j}`} />
+                  <NavNode node={item} key={`${i}-${j}`} />
                 ))}
               </div>
             </div>
           ) : (
-            <NavItem item={entry} key={`item-${i}`} />
+            <NavNode node={entry} key={`item-${i}`} />
           ),
         )}
       </div>

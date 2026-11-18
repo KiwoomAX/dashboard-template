@@ -69,8 +69,8 @@
 
   --text-primary: #1A1A1A;
   --text-secondary: #5D5D5D;
-  --text-tertiary: #8E8E8E;
-  --link: #5D5D5D;
+  --text-tertiary: #6E6E6E;
+  --link: #2A5FA0;
   --link-hover: var(--accent);
   --focus: #2A5FA0;
   --disabled: #8E8E8E;
@@ -96,8 +96,13 @@
   --ok-weak: var(--accent-weak);
   --warn: #E98B33;
   --warn-weak: #FCEFE2;
-  --bad: #C93A3A;
+  --warn-fill: #FFC98A;
+  --warn-ink: #4F2800;
+  --warn-text: #F26A00;
+  --bad: #E5202B;
   --bad-weak: #F9E7E7;
+  --bad-fill: #FFB3AE;
+  --bad-ink: #6B0F12;
   /* 마감 알림 면 위의 글자(알림 종 건수 배지). 밤의 --bad 는 밝아 흰 글자가 묻히므로 밤에는 어둡게 둔다 */
   --on-bad: #FFFFFF;
 
@@ -105,7 +110,7 @@
      자금 유입과 유출도 등락이므로 같은 값을 쓴다.
      글자는 --rise · --fall 을 쓰고, 흰 글자를 얹는 면과 도형은 --rise-fill · --fall-fill 을
      쓴다. 밤에는 면 위에 흰 글자를 얹지 않으므로 둘이 같은 값이다 */
-  --rise: #C93A3A;
+  --rise: #E5202B;
   --fall: #2A5FA0;
   --rise-fill: #B0453F;
   --fall-fill: #3F6FA8;
@@ -117,13 +122,15 @@
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-full: 9999px;
+  /* 표와 오른쪽 상세 패널의 모서리. Tailwind 의 rounded-lg · rounded-xl 을 바꾸면 이미 쓰는 화면이
+     달라지고 크기 순서도 뒤집히므로 이름을 따로 둔다 */
+  --table-radius: 12px;
+  --panel-radius: 18px;
 
   /* 키보드로 어디에 있는지 알리는 표시. 두께와 간격을 화면마다 다르게 적지 않는다 */
   --focus-width: 2px;
   --focus-offset: 1px;
 
-  /* 그림자는 「떠 있다」는 신호다. 잠깐 나타났다 사라지는 것에만 쓰고
-     카드와 표와 지표 칸에는 두지 않는다 */
   --elev-sm: 0 1px 3px rgba(0, 0, 0, .08);
   --elev-md: 0 6px 18px rgba(0, 0, 0, .14);
 
@@ -133,18 +140,21 @@
   --z-popover: 60;
   --z-modal: 80;
 
-  /* 맑은 고딕은 Semilight · Regular · Bold 세 벌뿐이다. 500 은 400 으로, 600 은 700 으로
-     그려지므로 그 둘은 이름을 두지 않는다 */
-  --w-light: 300;
+  /* 굵기는 맑은 고딕의 보통과 굵게 두 가지만 쓴다. 300 · 500 · 600 은 이름을 두지 않는다 */
   --w-regular: 400;
   --w-bold: 700;
 
   --sp-xs: 4px; --sp-sm: 8px; --sp-md: 16px; --sp-lg: 24px; --sp-xl: 32px;
+  /* 표 칸 여백처럼 위 단계 사이의 값 */
+  --sp-12: 12px; --sp-20: 20px;
 
-  --rail-w: 264px;
+  /* 글자 크기. 쓰임은 kw-design 스킬의 글자 크기 표를 따른다 */
+  --fs-metric: 17px; --fs-body: 14px; --fs-sub: 13px; --fs-label: 12px; --fs-badge: 11px; --fs-note: 10px;
+
+  --rail-w: 238px;
   /* 사이드바 머리 칸과 상태바의 높이. 둘은 따로 정한다 */
-  --head-h: 68px;
-  --topbar-h: 56px;
+  --head-h: 61px;
+  --topbar-h: 50px;
   --t-fast: .15s ease;
 
   --lead-tight: 1.2; --lead-snug: 1.5; --lead-relaxed: 1.6;
@@ -190,8 +200,8 @@
 
     --text-primary: #F2F4F7;
     --text-secondary: #A8B0BC;
-    --text-tertiary: #7C8490;
-    --link: #A8B0BC;
+    --text-tertiary: #98A0AC;
+    --link: #6FB0FF;
     --focus: #6FB0FF;
     --disabled: #7C8490;
 
@@ -203,13 +213,18 @@
 
     --warn: #E08A4E;
     --warn-weak: #2E2622;
-    --bad: #FF7A6E;
+    --warn-fill: #FFC07A;
+    --warn-ink: #3D2000;
+    --warn-text: #FF9A4D;
+    --bad: #FF5A50;
     --bad-weak: #322426;
+    --bad-fill: #FF9C94;
+    --bad-ink: #4A0B0E;
     --on-bad: #12161C;
 
-    --rise: #FF7A6E;
+    --rise: #FF5A50;
     --fall: #6FB0FF;
-    --rise-fill: #FF7A6E;
+    --rise-fill: #FF5A50;
     --fall-fill: #6FB0FF;
     --rise-weak: #322426;
     --fall-weak: #222B35;
@@ -258,8 +273,8 @@
 
   --text-primary: #F2F4F7;
   --text-secondary: #A8B0BC;
-  --text-tertiary: #7C8490;
-  --link: #A8B0BC;
+  --text-tertiary: #98A0AC;
+  --link: #6FB0FF;
   --focus: #6FB0FF;
   --disabled: #7C8490;
 
@@ -271,13 +286,18 @@
 
   --warn: #E08A4E;
   --warn-weak: #2E2622;
-  --bad: #FF7A6E;
+  --warn-fill: #FFC07A;
+  --warn-ink: #3D2000;
+  --warn-text: #FF9A4D;
+  --bad: #FF5A50;
   --bad-weak: #322426;
+  --bad-fill: #FF9C94;
+  --bad-ink: #4A0B0E;
   --on-bad: #12161C;
 
-  --rise: #FF7A6E;
+  --rise: #FF5A50;
   --fall: #6FB0FF;
-  --rise-fill: #FF7A6E;
+  --rise-fill: #FF5A50;
   --fall-fill: #6FB0FF;
   --rise-weak: #322426;
   --fall-weak: #222B35;
@@ -366,9 +386,18 @@
   --shadow-sm: var(--elev-sm);
   --shadow-md: var(--elev-md);
 
-  --font-weight-light: var(--w-light);
   --font-weight-regular: var(--w-regular);
   --font-weight-bold: var(--w-bold);
+
+  --text-metric: var(--fs-metric);
+  --text-body: var(--fs-body);
+  --text-sub: var(--fs-sub);
+  --text-label: var(--fs-label);
+  --text-badge: var(--fs-badge);
+  --text-note: var(--fs-note);
+
+  --radius-table: var(--table-radius);
+  --radius-panel: var(--panel-radius);
 
   --color-outline: var(--border-light);
   --color-outline-strong: var(--border-medium);
@@ -380,8 +409,13 @@
   --color-status-ok-weak: var(--ok-weak);
   --color-status-warn: var(--warn);
   --color-status-warn-weak: var(--warn-weak);
+  --color-status-warn-fill: var(--warn-fill);
+  --color-status-warn-ink: var(--warn-ink);
+  --color-status-warn-text: var(--warn-text);
   --color-status-bad: var(--bad);
   --color-status-bad-weak: var(--bad-weak);
+  --color-status-bad-fill: var(--bad-fill);
+  --color-status-bad-ink: var(--bad-ink);
 
   --color-rise: var(--rise);
   --color-fall: var(--fall);
